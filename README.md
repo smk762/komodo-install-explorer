@@ -4,6 +4,13 @@ This repository simply modifies Decker's script from https://github.com/DeckerSU
 
 ## Instructions
 
+### Prerequisites
+
+```bash
+sudo apt install git npm python2
+npm config set python $(which python2)
+```
+
 ### Setup Smart Chain
 
 Either create a new Smart Chain or launch an existing one using its launch parameters. Then shutdown the daemon using the `stop` command.
