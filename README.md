@@ -70,3 +70,16 @@ In that case, if you wish to run them at the same time, modify the `install-asse
 ```bash
 install-assetchain-explorer.sh SMARTCHAINNAME1
 ```
+
+### Customising your explorer
+By default, smartchain explorers will show Komodo Platform branding, such as the logos and currency ticker denomination.
+
+- To update the logos, replace the images in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/img`
+- Change `netSymbol` in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/js/main.js` to your smartchain ticker
+- Change `netSymbol` in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/js/main.min.js` to your smartchain ticker
+- Search the files in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/views` for references to Komodo to find extra items and links you want to update
+- To change the "incoming transaction" alert sound, replace the mp3 file in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/sound`
+- If you want to customise the color scheme:
+  - Update `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/index.html` head elements, and add a link to custom css file
+  - Add your custom css file in `~/komodo-install-explorer/SMARTCHAINNAME-explorer/node_modules/insight-ui-komodo/public/css`
+
