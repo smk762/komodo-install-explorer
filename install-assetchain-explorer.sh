@@ -20,6 +20,8 @@ echo "Installing an explorer for $ac in the current directory: $CUR_DIR"
 
 declare -a kmd_coins=$ac
 
+$zmqport
+rpcip=${KMD_RPCIP:-"127.0.0.1"}
 rpcuser=${KMD_RPCUSER:-rpc_username}
 rpcpassword=${KMD_RPCPASS:-rpc_password}
 rpcport=${KMD_RPCPORT:-7000}
@@ -31,14 +33,14 @@ mkdir -p $conf_dir
 touch $conf_path
 cat <<EOF > $conf_path
     server=1
-    whitelist=127.0.0.1
+    whitelist=$rpcip
     txindex=1
     addressindex=1
     timestampindex=1
     spentindex=1
-    zmqpubrawtx=tcp://127.0.0.1:$zmqport
-    zmqpubhashblock=tcp://127.0.0.1:$zmqport
-    rpcallowip=127.0.0.1
+    zmqpubrawtx=tcp://$rpcip:$zmqport
+    zmqpubhashblock=tcp://$rpcip:$zmqport
+    rpcallowip=$rpcip
     rpcport=$rpcport
     rpcuser=$rpcuser
     rpcpassword=$rpcpassword
@@ -72,17 +74,17 @@ cat << EOF > $CUR_DIR/${ac}-explorer/bitcore-node.json
     "bitcoind": {
       "connect": [
         {
-          "rpchost": "127.0.0.1",
+          "rpchost": "$rpcip",
           "rpcport": $rpcport,
           "rpcuser": "$rpcuser",
           "rpcpassword": "$rpcpassword",
-          "zmqpubrawtx": "tcp://127.0.0.1:$zmqport"
+          "zmqpubrawtx": "tcp://$rpcip:$zmqport"
         }
       ]
     },
   "insight-api-komodo": {
     "rateLimiterOptions": {
-      "whitelist": ["::ffff:127.0.0.1","127.0.0.1"],
+      "whitelist": ["::ffff:$rpcip","$rpcip"],
       "whitelistLimit": 500000,
       "whitelistInterval": 3600000
     }

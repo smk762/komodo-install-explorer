@@ -3,11 +3,13 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG KMD_AC_NAME=KIPPER
+ARG KMD_RPCIP="127.0.0.1"
 ARG KMD_RPCPORT=7000
 ARG KMD_RPCUSER=rpc_username
 ARG KMD_RPCPASS=rpc_password
 
 ENV KMD_AC_NAME=${KMD_AC_NAME}
+ENV KMD_RPCIP=${KMD_RPCIP}
 ENV KMD_RPCPORT=${KMD_RPCPORT}
 ENV KMD_RPCUSER=${KMD_RPCUSER}
 ENV KMD_RPCPASS=${KMD_RPCPASS}
@@ -19,8 +21,7 @@ RUN apt update && apt install git wget sudo python2 build-essential ufw python3 
 
 RUN git clone https://github.com/smk762/komodo-install-explorer -b dockerised && \
      cd komodo-install-explorer && ls -al && pip3 install --upgrade pip && \
-     pip3 install --upgrade -r requirements.txt \
-     ./setup-explorer-directory.sh ${KMD_AC_NAME} \
+     pip3 install --upgrade -r requirements.txt && \
+     ./setup-explorer-directory.sh ${KMD_AC_NAME} && \
      ./install-assetchain-explorer.sh ${KMD_AC_NAME}
 
-# RUN sed -i 's/testnet = false/testnet = true/g' /home/zcashd/zc/node_modules/insight-ui-zcash/public/src/js/app.js
