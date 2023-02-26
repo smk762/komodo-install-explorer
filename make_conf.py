@@ -11,6 +11,7 @@ load_dotenv()
 rpc_port = int(os.getenv('KMD_RPCPORT'))
 rpcpass = os.getenv('KMD_RPCPASS')
 rpcuser = os.getenv('KMD_RPCUSER')
+ac_name = os.getenv('KMD_AC_NAME')
 
 try:
     node_dir = f"/root/.komodo/{ac_name}"

@@ -17,23 +17,12 @@ ac=$1
 
 CUR_DIR=$(pwd)
 echo "Installing an explorer for $ac in the current directory: $CUR_DIR"
-if [[ "$ac" == "KMD"  ]]; then
-  conf_dir="${HOME}/.komodo"
-  conf_file="komodo.conf"
-  conf_path="${conf_dir}/${conf_file}"
-else
-  echo -e "$STEP_START[ * ]$STEP_END Modifying $ac's '.conf' file at $HOME/.komodo/$ac/$ac.conf"
-  conf_dir="${HOME}/.komodo/${ac}"
-  conf_file="${ac}.conf"
-  conf_path="${conf_dir}/${conf_file}"
-fi
-
-. ${conf_path}
-echo -e "$STEP_START[ * ]$STEP_END Modifying $ac's '.conf' file at ${conf_path}"
 
 declare -a kmd_coins=$ac
 
-rpcport=$rpcport
+rpcuser=${KMD_RPCUSER:-rpc_username}
+rpcpassword=${KMD_RPCPASS:-rpc_password}
+rpcport=${KMD_RPCPORT:-7000}
 zmqport=$((rpcport+2))
 webport=$((rpcport+3))
 
