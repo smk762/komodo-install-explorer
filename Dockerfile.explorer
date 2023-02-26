@@ -12,15 +12,15 @@ ENV KMD_RPCPORT=${KMD_RPCPORT}
 ENV KMD_RPCUSER=${KMD_RPCUSER}
 ENV KMD_RPCPASS=${KMD_RPCPASS}
 
-COPY . .
+RUN mkdir -p /explorer
+WORKDIR /explorer
 
-RUN apt update 
-RUN apt install git wget sudo python2 build-essential ufw python3 python3-pip libcurl4-openssl-dev libssl-dev build-essential -y
-RUN echo $(which python2) && ln -s $(which python2) /usr/bin/python
+RUN apt update && apt install git wget sudo python2 build-essential ufw python3 python3-pip libcurl4-openssl-dev libssl-dev build-essential -y && echo $(which python2) && ln -s $(which python2) /usr/bin/python
 
-RUN pip3 install --upgrade pip && pip3 install --upgrade -r requirements.txt
-RUN ./setup-explorer-directory.sh ${KMD_AC_NAME}
-RUN ./install-assetchain-explorer.sh ${KMD_AC_NAME} && pwd && ls -al
-
+RUN git clone https://github.com/smk762/komodo-install-explorer -b dockerised && ls -al && \
+     cd komodo-install-explorer && ls -al && pip3 install --upgrade pip && \
+     pip3 install --upgrade -r requirements.txt && ls -al && \
+     ./setup-explorer-directory.sh ${KMD_AC_NAME} && ls -al && \
+     ./install-assetchain-explorer.sh ${KMD_AC_NAME} && pwd && ls -al && cd .. && pwd && ls -al 
 
 # RUN sed -i 's/testnet = false/testnet = true/g' /home/zcashd/zc/node_modules/insight-ui-zcash/public/src/js/app.js
