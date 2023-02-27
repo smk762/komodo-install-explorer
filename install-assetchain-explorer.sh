@@ -21,7 +21,7 @@ echo "Installing an explorer for $ac in the current directory: $CUR_DIR"
 declare -a kmd_coins=$ac
 
 $zmqport
-rpcip=${KMD_RPCIP:-"127.0.0.1"}
+rpcip=${KMD_RPCIP:-chains}
 rpcuser=${KMD_RPCUSER:-rpc_username}
 rpcpassword=${KMD_RPCPASS:-rpc_password}
 rpcport=${KMD_RPCPORT:-7000}
