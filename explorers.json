@@ -1,0 +1,10 @@
+{
+    "VOTE2023": {
+        "rpcip": "127.0.0.1",
+        "rpcport": 46857,
+        "rpcuser": "WeOcNO6wck8lZY9C",
+        "rpcpassword": "w8LWhC82mPlQZHsU1iUnOu9hgiDJPlvd",
+        "webport": 8091,
+        "zmqport": 50501
+    }
+}
