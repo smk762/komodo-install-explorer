@@ -1,4 +1,11 @@
 #!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo "No arguments provided. You need to add the assetchain ticker as a parameter"
+    echo "For example: ./update_styles.sh MARTY"
+    exit 1
+fi
+
 echo "Updating logo..."
 
 if [ ! -f "${1}-explorer/node_modules/insight-ui-komodo/public/css/main.min.css.original" ]; then
@@ -13,9 +20,10 @@ if [ ! -f "${1}-explorer/node_modules/insight-ui-komodo/public/views/index.html.
     cp "${1}-explorer/node_modules/insight-ui-komodo/public/views/status.html" "${1}-explorer/node_modules/insight-ui-komodo/public/views/status.html.original"
 fi
 
-cp ${1}-favicon.ico ${1}-explorer/node_modules/insight-ui-komodo/public/img/icons/favicon.ico
-cp ${1}-logo.png ${1}-explorer/node_modules/insight-ui-komodo/public/img/logo.png
-cp Horizontal-Light.png ${1}-explorer/node_modules/insight-ui-komodo/public/img/komodoplatform.png
+echo "Updating logos..."
+cp logos/${1}-favicon.ico ${1}-explorer/node_modules/insight-ui-komodo/public/img/icons/favicon.ico
+cp logos/${1}-logo.png ${1}-explorer/node_modules/insight-ui-komodo/public/img/logo.png
+cp logos/Horizontal-Light.png ${1}-explorer/node_modules/insight-ui-komodo/public/img/komodoplatform.png
 
 echo "Setting currency to $1 and updating coin names..."
 sed "s/KMD/${1}/g" -i "${1}-explorer/node_modules/insight-ui-komodo/public/js/main.min.js"

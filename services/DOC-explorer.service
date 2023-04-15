@@ -1,0 +1,30 @@
+[Unit]
+Description=DOC-block-explorer
+Wants=network-online.target
+After=network-online.target
+
+# Point this to the coin deamons service file
+After=network.target DOC-deamon.service
+
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+WorkingDirectory=/home/admin/komodo-install-explorer
+ExecStart=/home/admin/komodo-install-explorer/DOC-explorer-start.sh
+
+# Logs path
+StandardOutput=append:/home/admin/logs/DOC_explorer.log
+StandardError=append:/home/admin/logs/DOC_explorer.log
+
+User=admin
+Group=admin
+Type=simple
+TimeoutStopSec=30min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+
+

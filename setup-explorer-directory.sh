@@ -14,7 +14,7 @@ echo "This script needs to be run only once in a directory. It installs dependen
 echo -e "$STEP_START[ * ]$STEP_END Installing dependencies, might require 'sudo' password"
 sudo apt update
 sudo apt --yes install git
-sudo apt --yes install build-essential pkg-config ufw libc6-dev libevent-dev m4 g++-multilib autoconf libtool libncurses5-dev unzip git python zlib1g-dev wget bsdmainutils automake libboost-all-dev libssl-dev libprotobuf-dev protobuf-compiler libqt4-dev python2 libqrencode-dev libdb++-dev ntp ntpdate
+sudo apt --yes install build-essential pkg-config ufw libc6-dev libevent-dev m4 g++-multilib autoconf libtool libncurses5-dev unzip git python zlib1g-dev wget bsdmainutils automake libboost-all-dev libssl-dev libprotobuf-dev protobuf-compiler python2 libqrencode-dev libdb++-dev ntp ntpdate
 sudo apt --yes install libcurl4-gnutls-dev
 sudo apt --yes install curl
 sudo ln -s $(which python2) /usr/bin/python

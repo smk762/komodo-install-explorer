@@ -1,10 +1,18 @@
 {
-    "VOTE2023": {
+    "DOC": {
         "rpcip": "127.0.0.1",
         "rpcport": 46857,
-        "rpcuser": "WeOcNO6wck8lZY9C",
-        "rpcpassword": "w8LWhC82mPlQZHsU1iUnOu9hgiDJPlvd",
+        "rpcuser": "ktSibPg7q56YUKLs",
+        "rpcpassword": "6Cur7dIgwkswjc1yTarkEmUHOVcj3eiV",
         "webport": 8091,
         "zmqport": 50501
+    },
+    "MARTY": {
+        "rpcip": "127.0.0.1",
+        "rpcport": 46858,
+        "rpcuser": "wNyl8yRY3R461EbF",
+        "rpcpassword": "rs56WeJrXLvrsQ9XcWBrfEz9PWGtxSsx",
+        "webport": 8092,
+        "zmqport": 50502
     }
 }

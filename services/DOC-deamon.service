@@ -1,0 +1,27 @@
+[Unit]
+Description=DOC-daemon
+Wants=network-online.target
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+# Path to deamon binary. Pubkey links to address: RLF5dPpmQvEp2ZWM3NzHsMW5D5qvrgFPRn
+ExecStart=/usr/local/bin/komodod -ac_name=DOC -ac_supply=90000000000 -ac_reward=100000000 -ac_cc=3 -ac_staked=10 -addnode=65.21.77.109 -pubkey=02eaae2df4ca621a300244b12c160da9011fa889b60bdf6dacdd56d294a95b7d3e
+
+# Path to deamon CLI wrapper
+ExecStop=/usr/local/bin/komodo-cli -ac_name=DOC stop
+
+# Logs path
+StandardOutput=append:/home/admin/logs/DOC_daemon.log
+StandardError=append:/home/admin/logs/DOC_daemon.log
+
+User=admin
+Group=admin
+Type=simple
+TimeoutStopSec=30min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

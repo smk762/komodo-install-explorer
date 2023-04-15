@@ -1,0 +1,30 @@
+[Unit]
+Description=MARTY-block-explorer
+Wants=network-online.target
+After=network-online.target
+
+# Point this to the coin deamons service file
+After=network.target MARTY-deamon.service
+
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+WorkingDirectory=/home/admin/komodo-install-explorer
+ExecStart=/home/admin/komodo-install-explorer/MARTY-explorer-start.sh
+
+# Logs path
+StandardOutput=append:/home/admin/logs/MARTY_explorer.log
+StandardError=append:/home/admin/logs/MARTY_explorer.log
+
+User=admin
+Group=admin
+Type=simple
+TimeoutStopSec=30min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+
+

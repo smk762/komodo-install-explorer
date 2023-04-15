@@ -63,10 +63,19 @@ In that case, if you wish to run them at the same time, modify the `install-asse
 ```bash
 install-assetchain-explorer.sh SMARTCHAINNAME1
 ```
-### Customisation
-UI assets are located under YOURCHAIN-explorer/node_modules/insight-ui-komodo/public
-Change logo - YOURCHAIN-explorer/node_modules/insight-ui-komodo/public/img/logo.png (change logo.png in this folder to update)
-Change currency - YOURCHAIN-explorer/node_modules/insight-ui-komodo/public/js/main.min.js (change `netSymbol`)
-Change page headings - YOURCHAIN-explorer/node_modules/insight-ui-komodo/public/src/js/config.js
-Change page headings - YOURCHAIN-explorer/node_modules/insight-ui-komodo/public/index.html
+### User Interface Customisation
 
+- UI assets location: `TICKER-explorer/node_modules/insight-ui-komodo/public`
+- Change logo: `TICKER-explorer/node_modules/insight-ui-komodo/public/img/logo.png` (change logo.png in this folder to update)
+- Change currency: `TICKER-explorer/node_modules/insight-ui-komodo/public/js/main.min.js` (change `netSymbol`)
+- Change page headings: `TICKER-explorer/node_modules/insight-ui-komodo/public/src/js/config.js`
+- Change page headings: `TICKER-explorer/node_modules/insight-ui-komodo/public/index.html`
+
+You can use these scripts for quick theme updates:
+- `./update_styles.sh` will update logos, the currency variable and css colors.
+- `./reset_styles.sh` will return the theme to default.
+
+
+### SSL Certificates
+
+- Generate certificates with: `sudo certbot certonly -d TICKER.DOMAIN.COM`

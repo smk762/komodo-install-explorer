@@ -1,0 +1,30 @@
+[Unit]
+Description=COIN-block-explorer
+Wants=network-online.target
+After=network-online.target
+
+# Point this to the coin deamons service file
+After=network.target COIN-deamon.service
+
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+WorkingDirectory=/home/USERNAME/komodo-install-explorer
+ExecStart=/home/USERNAME/komodo-install-explorer/COIN-explorer-start.sh
+
+# Logs path
+StandardOutput=append:/home/USERNAME/logs/COIN_explorer.log
+StandardError=append:/home/USERNAME/logs/COIN_explorer.log
+
+User=USERNAME
+Group=USERNAME
+Type=simple
+TimeoutStopSec=30min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+
+

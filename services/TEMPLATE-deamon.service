@@ -1,0 +1,27 @@
+[Unit]
+Description=TICKER-daemon
+Wants=network-online.target
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+# Path to deamon binary. Pubkey links to address: ADDRESS
+ExecStart=/usr/local/bin/komodod LAUNCH_PARAMS -pubkey=PUBKEY
+
+# Path to deamon CLI wrapper
+ExecStop=/usr/local/bin/komodo-cli -ac_name=TICKER stop
+
+# Logs path
+StandardOutput=append:/home/USERNAME/logs/TICKER_daemon.log
+StandardError=append:/home/USERNAME/logs/TICKER_daemon.log
+
+User=USERNAME
+Group=USERNAME
+Type=simple
+TimeoutStopSec=30min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
