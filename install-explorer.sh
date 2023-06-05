@@ -1,25 +1,24 @@
 #!/bin/bash
 
 #
-# (c) Decker, 2018
+# (c) Decker, 2018; Modified by smk 2023
 #
 
 if [[ -z ${1} ]]; then
-    read -p "Enter coin ticker: " coin
+    read -p "Enter coin ticker: " ac
 else
-    coin=$1
+    ac=$1
 fi
 
 
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
 
-ac=$1
-
 CUR_DIR=$(pwd)
 echo "Installing an explorer for $ac in the current directory: $CUR_DIR"
 
-./configure_chain_explorer.py $ac create_ticker_conf
+
+./configure.py $ac create_ticker_conf
 
 echo -e "$STEP_START[ * ]$STEP_END Installing explorer for $ac"
 
@@ -28,8 +27,9 @@ cd ${ac}-explorer
 $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node install git+https://git@github.com/DeckerSU/insight-api-komodo git+https://git@github.com/DeckerSU/insight-ui-komodo
 cd $CUR_DIR
 
-./configure_chain_explorer.py $ac create_explorer_conf
-./configure_chain_explorer.py $ac create_webaccess $2
+./configure.py $ac create_explorer_conf
+./configure.py $ac create_webaccess $2
+./create_services.sh $ac
 
 echo "Patching the installation to display notarization data"
 

@@ -5,9 +5,14 @@ import sys
 import stat
 import json
 import string
-import random
 import secrets
 import requests
+import const
+from dotenv import load_dotenv
+
+load_dotenv()
+home = os.path.expanduser("~")
+
 
 def get_random_string(length=16):
     char_pool = string.ascii_uppercase + string.ascii_lowercase + string.digits
@@ -25,8 +30,8 @@ def create_launcher(ticker):
         f.write(f'[ -s "{home}/.nvm/nvm.sh" ] && . "{home}/.nvm/nvm.sh" # This loads nvm\n')
         f.write(f'cd {ticker}-explorer\n')
         f.write('nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n')
-
     os.chmod(f"{ticker}-explorer-start.sh", stat.S_IRWXU)
+
 
 def get_explorers():
     try:
@@ -36,7 +41,6 @@ def get_explorers():
         return {}
 
 def create_conf_file(ticker):
-
     explorers = get_explorers()
     explorer_index = len(explorers)
     print(f"{explorer_index} existing explorers")
@@ -65,14 +69,18 @@ def create_conf_file(ticker):
         webport = explorers[ticker]["webport"]
         zmqport = explorers[ticker]["zmqport"]
         
+        if ticker == "KMD":
+            coin_conf_path = const.KOMODO_CONF_PATH
+            coin_conf_file = f"{const.KOMODO_CONF_PATH}/komodo.conf"
+        else:
+            coin_conf_path = f"{const.KOMODO_CONF_PATH}/{ticker}"
+            coin_conf_file = f"{const.KOMODO_CONF_PATH}/{ticker}/{ticker}.conf"
 
-        conf_dir = f"{home}/.komodo/{ticker}"
-        if not os.path.exists(f"{home}/.komodo/{ticker}"):
-            os.makedirs(f"{home}/.komodo/{ticker}")
+        if not os.path.exists(coin_conf_path):
+            os.makedirs(coin_conf_path)
 
-        conf_path = f"{home}/.komodo/{ticker}/{ticker}.conf"
-        print(f"Updating {conf_path}")
-        with open(conf_path, 'w') as f:
+        print(f"Updating {coin_conf_file}")
+        with open(coin_conf_file, 'w') as f:
             f.write("addressindex=1\n")
             f.write(f"rpcallowip={rpcip}\n")
             f.write(f"rpcpassword={rpcpassword}\n")
@@ -94,7 +102,7 @@ def create_explorer_conf(ticker):
     explorers = get_explorers()
 
     if ticker not in explorers:
-        print("Ticker is not in explorers.json! Run `./configure_chain_explorer.py create_ticker_conf` first.")
+        print("Ticker is not in explorers.json! Run `./configure.py create_ticker_conf` first.")
         sys.exit(0)
     else:
         rpcip = explorers[ticker]["rpcip"]
@@ -139,7 +147,7 @@ def create_explorer_conf(ticker):
 def create_webaccess(ticker, noweb):
     explorers = get_explorers()
     if ticker not in explorers:
-        print("Ticker is not in explorers.json! Run `./configure_chain_explorer.py create_ticker_conf` first.")
+        print("Ticker is not in explorers.json! Run `./configure.py create_ticker_conf` first.")
         sys.exit(0)
     else:
         rpcip = explorers[ticker]["rpcip"]
@@ -167,6 +175,68 @@ def clean(ticker):
             del explorers[ticker]
             json.dump(explorers, f, indent=4)
 
+
+class NginxConfig:
+    def __init__(self, coin, subdomain=""):
+        self.coin = coin
+        self.subdomain = subdomain
+        if self.subdomain == "":
+            self.subdomain = self.get_subdomain(coin)
+
+    def create_conf(self):
+        home = os.path.expanduser("~")
+        webroot = os.getenv(f'{self.coin}_WEBROOT')
+        if not webroot:
+            webroot = f"{home}/insight"
+            os.makedirs(webroot, exist_ok=True)
+
+        proxy_host = os.getenv(f'{self.coin}_PROXY_PASS_HOST')
+        if not proxy_host:
+            proxy_host = '127.0.0.1'
+
+        explorer_port = os.getenv(f'{self.coin}_EXPLORER_PORT')
+        if not explorer_port:
+            explorer_port = self.check_webaccess()
+        if not explorer_port:
+            explorer_port = input(f"Enter the {self.coin} explorer's port: ")
+
+        self.create_serverblock(webroot, proxy_host, self.subdomain, explorer_port)
+
+    def get_subdomain(self):
+        subdomain = os.getenv(f'{self.coin}_SUBDOMAIN')
+        if not subdomain:
+            subdomain = input(f"Enter the {self.coin} explorer's subdomain name: ")
+        return subdomain
+
+    def check_webaccess(self):
+        script_path = os.path.realpath(os.path.dirname(__file__))
+        if not os.path.exists(f'{script_path}/{self.coin}-webaccess'):
+            return None
+        with open(f"{script_path}/{self.coin}-webaccess", "r") as r:
+            for line in r.readlines():
+                if line.find("webport") > -1:
+                    return line.split("=")[1]
+
+    def create_serverblock(self, webroot, proxy_host, subdomain, explorer_port):
+        home = os.path.expanduser("~")
+        script_path = os.path.realpath(os.path.dirname(__file__))
+        blockname = f"{script_path}/nginx/{self.coin}-explorer.serverblock"
+        with open(f"{script_path}/nginx/TEMPLATE.serverblock", "r") as r:
+            with open(blockname, "w") as w:
+                for line in r.readlines():
+                    line = line.replace("COIN", self.coin)
+                    line = line.replace("HOMEDIR", home)
+                    line = line.replace("WEBROOT", webroot)
+                    line = line.replace("SUBDOMAIN", subdomain)
+                    line = line.replace("PROXY_HOST", proxy_host)
+                    line = line.replace("EXPLORER_PORT", explorer_port)
+                    w.write(f"{line}")
+        print(f"NGINX config saved to {blockname}")
+        print(f"Activate it with 'sudo ln -s {blockname} /etc/nginx/sites-enabled/{self.coin}-explorer.serverblock'")
+        print(f"Then restart nginx with 'sudo systemctl restart nginx'")
+
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         ticker = sys.argv[1]
@@ -178,13 +248,19 @@ if __name__ == '__main__':
     else:
         step = "create_ticker_conf"
 
+    if len(sys.argv) > 3:
+        domain_name = sys.argv[3]
+    else:
+        domain_name = ""
+
     print(f"Running step: {step} on {ticker}")
 
-    home = os.path.expanduser("~")
     script_path = os.path.dirname(os.path.abspath(__file__))
-
     if step == "create_ticker_conf":
         create_conf_file(ticker)
+    if step == "create_nginx_conf":
+        nginx = NginxConfig(ticker, domain_name)
+        nginx.create_conf()
     elif step == "create_explorer_conf":
         create_explorer_conf(ticker)
         create_launcher(ticker)

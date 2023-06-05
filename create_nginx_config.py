@@ -3,10 +3,10 @@ import os
 import sys
 import time
 from dotenv import load_dotenv
-from lib_logger import logger
-import lib_helper as helper
+from logger import logger
+import helpers as helper
 
-load_dotenv()
+
 
 def create_conf(coin, subdomain=False):
     home = os.path.expanduser("~")

@@ -16,4 +16,4 @@ fi
 
 sudo certbot certonly -d ${domain_name}
 
-./create_nginx_config.py ${coin} ${domain_name}
+./configure.py ${coin} create_nginx_conf ${domain_name}
