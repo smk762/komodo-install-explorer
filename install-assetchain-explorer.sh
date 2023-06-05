@@ -4,11 +4,12 @@
 # (c) Decker, 2018
 #
 
-if [ $# -eq 0 ]; then
-    echo "No arguments provided. You need to add the assetchain ticker as a parameter"
-    echo "For example: ./install-assetchain-explorer.sh MARTY"
-    exit 1
+if [[ -z ${1} ]]; then
+    read -p "Enter coin ticker: " coin
+else
+    coin=$1
 fi
+
 
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'

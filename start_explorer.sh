@@ -1,4 +1,11 @@
 #!/bin/bash
+
+if [[ -z ${1} ]]; then
+    read -p "Enter coin ticker: " coin
+else
+    coin=$1
+fi
+
 echo $(pwd)
 cd "/explorer/komodo-install-explorer"
 ls -al
