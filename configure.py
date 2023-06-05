@@ -62,40 +62,40 @@ def create_conf_file(ticker):
             })
             json.dump(explorers, f, indent=4)
 
-        rpcip = explorers[ticker]["rpcip"]
-        rpcport = explorers[ticker]["rpcport"]
-        rpcpassword = explorers[ticker]["rpcpassword"]
-        rpcuser = explorers[ticker]["rpcuser"]
-        webport = explorers[ticker]["webport"]
-        zmqport = explorers[ticker]["zmqport"]
-        
-        if ticker == "KMD":
-            coin_conf_path = const.KOMODO_CONF_PATH
-            coin_conf_file = f"{const.KOMODO_CONF_PATH}/komodo.conf"
-        else:
-            coin_conf_path = f"{const.KOMODO_CONF_PATH}/{ticker}"
-            coin_conf_file = f"{const.KOMODO_CONF_PATH}/{ticker}/{ticker}.conf"
+            rpcip = explorers[ticker]["rpcip"]
+            rpcport = explorers[ticker]["rpcport"]
+            rpcpassword = explorers[ticker]["rpcpassword"]
+            rpcuser = explorers[ticker]["rpcuser"]
+            webport = explorers[ticker]["webport"]
+            zmqport = explorers[ticker]["zmqport"]
+            
+            if ticker == "KMD":
+                coin_conf_path = const.KOMODO_CONF_PATH
+                coin_conf_file = f"{const.KOMODO_CONF_PATH}/komodo.conf"
+            else:
+                coin_conf_path = f"{const.KOMODO_CONF_PATH}/{ticker}"
+                coin_conf_file = f"{const.KOMODO_CONF_PATH}/{ticker}/{ticker}.conf"
 
-        if not os.path.exists(coin_conf_path):
-            os.makedirs(coin_conf_path)
+            if not os.path.exists(coin_conf_path):
+                os.makedirs(coin_conf_path)
 
-        print(f"Updating {coin_conf_file}")
-        with open(coin_conf_file, 'w') as f:
-            f.write("addressindex=1\n")
-            f.write(f"rpcallowip={rpcip}\n")
-            f.write(f"rpcpassword={rpcpassword}\n")
-            f.write(f"rpcport={rpcport}\n")
-            f.write(f"rpcuser={rpcuser}\n")
-            f.write("rpcworkqueue=256\n")
-            f.write("server=1\n")
-            f.write("showmetrics=0\n")
-            f.write("spentindex=1\n")
-            f.write("timestampindex=1\n")
-            f.write("txindex=1\n")
-            f.write("uacomment=bitcore\n")
-            f.write(f"whitelist={rpcip}\n")
-            f.write(f"zmqpubhashblock=tcp://{rpcip}:{zmqport}\n")
-            f.write(f"zmqpubrawtx=tcp://{rpcip}:{zmqport}\n")
+            print(f"Updating {coin_conf_file}")
+            with open(coin_conf_file, 'w') as f:
+                f.write("addressindex=1\n")
+                f.write(f"rpcallowip={rpcip}\n")
+                f.write(f"rpcpassword={rpcpassword}\n")
+                f.write(f"rpcport={rpcport}\n")
+                f.write(f"rpcuser={rpcuser}\n")
+                f.write("rpcworkqueue=256\n")
+                f.write("server=1\n")
+                f.write("showmetrics=0\n")
+                f.write("spentindex=1\n")
+                f.write("timestampindex=1\n")
+                f.write("txindex=1\n")
+                f.write("uacomment=bitcore\n")
+                f.write(f"whitelist={rpcip}\n")
+                f.write(f"zmqpubhashblock=tcp://{rpcip}:{zmqport}\n")
+                f.write(f"zmqpubrawtx=tcp://{rpcip}:{zmqport}\n")
 
 
 def create_explorer_conf(ticker):
@@ -238,6 +238,7 @@ class NginxConfig:
 
 
 if __name__ == '__main__':
+    # TODO: Update .env file?
     if len(sys.argv) > 1:
         ticker = sys.argv[1]
     else:
@@ -258,7 +259,7 @@ if __name__ == '__main__':
     script_path = os.path.dirname(os.path.abspath(__file__))
     if step == "create_ticker_conf":
         create_conf_file(ticker)
-    if step == "create_nginx_conf":
+    elif step == "create_nginx_conf":
         nginx = NginxConfig(ticker, domain_name)
         nginx.create_conf()
     elif step == "create_explorer_conf":

@@ -17,11 +17,18 @@ STEP_END='\e[0m'
 CUR_DIR=$(pwd)
 echo "Installing an explorer for $ac in the current directory: $CUR_DIR"
 
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip python3-venv nginx curl libcurl4-openssl-dev libssl-dev jq
+pip3 install -r requirements.txt
 
 ./configure.py $ac create_ticker_conf
 
 echo -e "$STEP_START[ * ]$STEP_END Installing explorer for $ac"
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+nvm use v4
+mkdir -p node_modules
 $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node create ${ac}-explorer
 cd ${ac}-explorer
 $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node install git+https://git@github.com/DeckerSU/insight-api-komodo git+https://git@github.com/DeckerSU/insight-ui-komodo
