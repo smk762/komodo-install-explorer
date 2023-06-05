@@ -1,0 +1,3 @@
+*.service
+!TEMPLATE-deamon.service
+!TEMPLATE-explorer.service

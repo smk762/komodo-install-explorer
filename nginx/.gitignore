@@ -1,0 +1,2 @@
+*.service.serverblock
+!TEMPLATE.serverblock

@@ -1,0 +1,10 @@
+{
+    "COIN": {
+        "rpcip": "127.0.0.1",
+        "rpcport": 46857,
+        "rpcuser": "USERNAME",
+        "rpcpassword": "PASSWORD",
+        "webport": 8091,
+        "zmqport": 50501
+    }
+}
