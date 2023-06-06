@@ -4,6 +4,8 @@ node_modules
 *-explorer/
 explorer-notarized/
 package-lock.json
+explorers.json
+*_7776
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
