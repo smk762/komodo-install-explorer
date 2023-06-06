@@ -6,10 +6,10 @@ StartLimitIntervalSec=60
 StartLimitBurst=5
 
 [Service]
-# Path to deamon binary. Pubkey links to address: ADDRESS
-ExecStart=/usr/local/bin/komodod LAUNCH_PARAMS -pubkey=PUBKEY
+# Path to daemon binary. Pubkey links to address: ADDRESS
+ExecStart=/usr/local/bin/komodod LAUNCH_PARAMS
 
-# Path to deamon CLI wrapper
+# Path to daemon CLI wrapper
 ExecStop=/usr/local/bin/komodo-cli -ac_name=TICKER stop
 
 # Logs path

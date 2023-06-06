@@ -3,8 +3,8 @@ Description=COIN-block-explorer
 Wants=network-online.target
 After=network-online.target
 
-# Point this to the coin deamons service file
-After=network.target COIN-deamon.service
+# Point this to the coin daemons service file
+After=network.target COIN-daemon.service
 
 StartLimitIntervalSec=60
 StartLimitBurst=5
