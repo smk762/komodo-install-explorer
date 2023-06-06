@@ -1,38 +1,39 @@
 #!/bin/bash
 
 #
-# (c) Decker, 2018
+# (c) Decker, 2018; Modified by smk 2023
 #
 
+CUR_DIR=$(pwd)
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
 
-CUR_DIR=$(pwd)
 echo "Preparing the current directory: $CUR_DIR"
 echo "This script needs to be run only once in a directory. It installs dependencies and komodo's flavour of bitcore-node"
 
-echo -e "$STEP_START[ * ]$STEP_END Installing dependencies, might require 'sudo' password"
+echo -e "$STEP_START[ * ]$STEP_END Installing apt dependencies, might require 'sudo' password"
 sudo apt update
-sudo apt --yes install git
-sudo apt --yes install build-essential pkg-config ufw libc6-dev libevent-dev m4 g++-multilib autoconf libtool libncurses5-dev unzip git python zlib1g-dev wget bsdmainutils automake libboost-all-dev libssl-dev libprotobuf-dev protobuf-compiler python2 libqrencode-dev libdb++-dev ntp ntpdate
-sudo apt --yes install libcurl4-gnutls-dev
-sudo apt --yes install curl
+sudo apt --yes install unzip git curl build-essential pkg-config jq ufw wget m4 autoconf libtool ntp ntpdate
+sudo apt --yes install g++-multilib libc6-dev libevent-dev libncurses5-dev zlib1g-dev libboost-all-dev
+sudo apt --yes install bsdmainutils automake libprotobuf-dev protobuf-compiler libqrencode-dev
+sudo apt --yes install libssl-dev libcurl4-gnutls-dev libsodium-dev libzmq3-dev libdb++-dev
+sudo apt --yes install python python2 python3 python3-pip python3-venv nginx libcurl4-openssl-dev
 sudo ln -s $(which python2) /usr/bin/python
 
-echo -e "$STEP_START[ * ]$STEP_END Installing NodeJS and Bitcore Node"
-
-
-# install nodejs and other stuff
-sudo apt --yes install libsodium-dev
-sudo apt --yes install libzmq3-dev
+# Install python dependencies
+echo -e "$STEP_START[ * ]$STEP_END Installing Python dependencies"
+pip3 install -r requirements.txt
 
 # install nvm
+echo -e "$STEP_START[ * ]$STEP_END Installing NodeJS"
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.39.3/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 echo $(which make)
 echo $(python -V)
+
 # switch node setup with nvm
+echo -e "$STEP_START[ * ]$STEP_END Installing Bitcore Node"
 nvm install v4
 mkdir -p node_modules
 npm install git+https://git@github.com/DeckerSU/bitcore-node-komodo # npm install bitcore
