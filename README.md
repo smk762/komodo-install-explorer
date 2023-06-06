@@ -1,81 +1,59 @@
 # Install a Block Explorer for a Komodo Smart Chain
 
-This repository simply modifies Decker's script from https://github.com/DeckerSU/komodo-explorers-install to work for a single Smart Chain
+This repository simply modifies Decker's script from https://github.com/DeckerSU/komodo-explorers-install to work for a individual Smart Chains.
+
 
 ## Instructions
 
-### Setup Smart Chain
-
-Either create a new Smart Chain or launch an existing one using its launch parameters. Then shutdown the daemon using the `stop` command.
-
-Example:
-
-```bash
-./komodo-cli -ac_name=SMARTCHAINNAME stop
-```
-
-The above step creates the '.conf' file for the Smart Chain at `$HOME/.komodo/SMARTCHAINNAME/SMARTCHAINNAME.conf` which will be modified and made use of by the explorer installation script.
-
 ### Explorer installation
 
-Clone this repository in your home directory and navigate into it
+- Stop the Smart Chain you want to add an explorer for (if it is running).
+- Clone this repository in your home directory and navigate into it.
 
 ```bash
 cd ~
-git clone https://github.com/gcharang/komodo-install-explorer
+git clone https://github.com/smk762/komodo-install-explorer -b dockerised
 cd komodo-install-explorer
 ```
 
-Run the script: https://github.com/gcharang/komodo-install-explorer/blob/master/setup-explorer-directory.sh
-This script installs dependencies and prepares the directory for installing the explorer
-
-```bash
-./setup-explorer-directory.sh
-```
-
-It should create a subdirectory named `node_modules`
-
-Now run the script: https://github.com/gcharang/komodo-install-explorer/blob/master/install-assetchain-explorer.sh with the Smart Chain's name as the argument
-
-```bash
-./install-assetchain-explorer.sh SMARTCHAINNAME
-```
-
-This will create a new sub directory named `SMARTCHAINNAME-explorer` and a script named `SMARTCHAINNAME-explorer-start.sh`
-It also adds data to a file called `SMARTCHAINNAME-webaccess` with the Smart Chain's name and the url to access the explorer from the internet.
-
-Start the Smart Chain with its launch parameters and execute the script `SMARTCHAINNAME-explorer-start.sh` when you want to start the explorer
-
-**Note:** Use the `noweb` option like so: `./install-assetchain-explorer.sh SMARTCHAINNAME noweb` to stop the script from prompting you to open the port for accessing the explorer through the internet; i.e., explorer will only be accessible on the local system
-
-**Note:** When launching the Smart Chain for the first time after installing the explorer, add the `-reindex` parameter to its launch parameters.
-
-### Adding another Smart Chain's explorer and running it at the same time
-
-You can use the `./install-assetchain-explorer.sh SMARTCHAINNAME` command to create explorers for as many Smart Chains as you want, just by changing the `SMARTCHAINNAME`
-
-You can also run them one at a time or all together at the same time depending on your needs.
-
-The only problem is when the ports of two different Smart Chains conflict with each other.
-
-In that case, if you wish to run them at the same time, modify the `install-assetchain-explorer.sh` script to have fixed port values that are all distinct and different from the other Smart Chain's ports. Lets say the Smart Chain's name is `SMARTCHAINNAME1`, then delete the sub directory named `SMARTCHAINNAME1-explorer` and the script named `SMARTCHAINNAME1-explorer-start.sh` and run the modified `install-assetchain-explorer.sh` with its name again:
-
-```bash
-install-assetchain-explorer.sh SMARTCHAINNAME1
-```
-### User Interface Customisation
-
-- UI assets location: `TICKER-explorer/node_modules/insight-ui-komodo/public`
-- Change logo: `TICKER-explorer/node_modules/insight-ui-komodo/public/img/logo.png` (change logo.png in this folder to update)
-- Change currency: `TICKER-explorer/node_modules/insight-ui-komodo/public/js/main.min.js` (change `netSymbol`)
-- Change page headings: `TICKER-explorer/node_modules/insight-ui-komodo/public/src/js/config.js`
-- Change page headings: `TICKER-explorer/node_modules/insight-ui-komodo/public/index.html`
-
-You can use these scripts for quick theme updates:
-- `./update_styles.sh` will update logos, the currency variable and css colors.
-- `./reset_styles.sh` will return the theme to default.
+- Run the script: `./setup-explorer-directory.sh` to install Insight Explorer dependencies. It should create a subdirectory named `node_modules`.
+- Run the script: `./install-explorer.sh TICKER` with the Smart Chain's name as the argument. This will:
+  - Install a bitcore node for your TICKER.
+  - Create a `TICKER-webaccess` file with the Smart Chain's name and the url to access the explorer from the internet. 
+  - Create a `TICKER-explorer` subfolder to contain the Insight API and Insight UI files.
+  - Configure the Insight API and UI to use the Smart Chain's daemon.
+  - Create a `TICKER-explorer-start.sh` script to use for launching the explorer.
+  - Create a daemon config file for the Smart Chain.
+  - Create and enable (but not start) systemd service files for the explorer and the Smart Chain daemon.
+  - Apply a patch to show notarisations in the Insight UI.
+- Next, restart the Smart Chain daemon. Once the daemon is ready for RPC calls, run `./TICKER-explorer-start.sh` to manually start the explorer.
 
 
-### SSL Certificates
+#### Optional Extras
 
-- Generate certificates with: `sudo certbot certonly -d TICKER.DOMAIN.COM`
+- To run additional explorers for other Smart Chains, repeat the above steps with a different Smart Chain ticker. Port mapping will automatically increment for each subsequent explorer.
+- To remove an explorer, run `./configure.py remove TICKER`. This will remove the explorer's directory, launch script and the webaccess file. You will need to manually remove filewall rules, the nginx serverblock and systemd service files (if used).
+- Use the `noweb` option like so: `./install-explorer.sh TICKER noweb` if you intend to only run the explorer locally (i.e. not on the public internet)
+- To generate SSL certificates for running the explorer on the public internet, run `./setup-ssl.sh TICKER your.domain.com`. This will:
+  - Creat an NGINX serverblock file.
+  - Create a sumbolic link from this file to the "/etc/nginx/sites-enabled" folder
+  - Restart NGINX.
+
+You can also override some default constant values by copying the `.env.template` file to `.env` in the project root folder and editing the values (this may be useful for dockerised deployments).
+
+
+#### User Interface Customisation
+
+The Insight UI code is located in `TICKER-explorer/node_modules/insight-ui-komodo`.
+For convenience, you can use these scripts for quick theme updates:
+- `./update-styles.sh` will update logos, the currency variable and css colors.
+- `./reset-styles.sh` will return the theme to default.
+
+To further customise the UI, refer to the code within `./update-styles.sh` to change colors, or see which files and css selectors to edit. This script is run automatically when you install an explorer, but it you modify it it will need to run it again for changes to take effect.
+
+#### TODO
+- Run `./setup-docker.sh` to configure a daemon, insight explorer and electrumx server to run in docker containers.
+- For electrums (long term, the docker container should manage the daemon, insight explorer and electrumx server):
+  - sudo cp ~/electrumx-1/contrib/systemd/electrumx.service /etc/systemd/system/electrumx_KMD.service
+  - sudo nano /etc/systemd/system/electrumx_KMD.service
+
