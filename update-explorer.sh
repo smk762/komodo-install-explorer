@@ -15,6 +15,6 @@ if [[ -z ${2} ]]; then
     fi
 fi
 
-./configure.py clean ${1}
-./install-explorer.sh ${1} ${web}
-./${1}-explorer-start.sh
+./configure.py clean ${coin}
+./install-explorer.sh ${coin} ${web}
+./${coin}-explorer-start.sh
