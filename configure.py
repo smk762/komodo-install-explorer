@@ -224,6 +224,7 @@ class ConfigExplorer:
 
 class ConfigNginx:
     def __init__(self, coin, subdomain=""):
+        self.utils = Utils()
         self.coin = coin
         self.subdomain = subdomain
         self.script_path = os.path.realpath(os.path.dirname(__file__))
