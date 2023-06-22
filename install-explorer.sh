@@ -64,6 +64,7 @@ echo "To run it, use 'sudo systemctl start $coin-daemon.service'"
 echo "Logs will go to ~/logs/${coin}-daemon.log"
 echo
 
+cd $CUR_DIR
 echo -e "$STEP_START[ * ]$STEP_END Patching the installation to display notarization data..."
 if [ ! -d "$CUR_DIR/explorer-notarized" ]; then
   echo -e "$STEP_START[ * ]$STEP_END Cloning the repository cointaining the notarisation patch"
