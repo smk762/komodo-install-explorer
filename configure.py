@@ -279,7 +279,7 @@ class ConfigNginx:
                     line = line.replace("WEBROOT", webroot)
                     line = line.replace("SUBDOMAIN", self.subdomain)
                     line = line.replace("PROXY_HOST", proxy_host)
-                    line = line.replace("EXPLORER_PORT", explorer_port)
+                    line = line.replace("EXPLORER_PORT", str(explorer_port))
                     w.write(f"{line}")
 
 
