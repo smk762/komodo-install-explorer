@@ -64,32 +64,32 @@ class Utils:
 
 class ConfigExplorer:
     def __init__(self, ticker):
-        self.ticker = ticker
+        self.coin = ticker
         self.utils = Utils()
         self.home = os.path.expanduser("~")
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.explorers = self.utils.get_explorers()
 
     def create_launcher(self):
-        with open(f"{self.ticker}-explorer-start.sh", 'w') as f:
+        with open(f"{self.coin}-explorer-start.sh", 'w') as f:
             f.write('#!/bin/bash\n')
             f.write(f'export NVM_DIR="{self.home}/.nvm"\n')
             f.write(f'[ -s "{self.home}/.nvm/nvm.sh" ] && . "{self.home}/.nvm/nvm.sh" # This loads nvm\n')
-            f.write(f'cd {self.ticker}-explorer\n')
+            f.write(f'cd {self.coin}-explorer\n')
             f.write('nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n')
-        os.chmod(f"{self.ticker}-explorer-start.sh", stat.S_IRWXU)
+        os.chmod(f"{self.coin}-explorer-start.sh", stat.S_IRWXU)
 
     def create_daemon_conf(self):
         explorer_index = len(self.explorers)
         logger.info(f"{explorer_index} existing explorers")
 
         with open(f"{self.script_path}/explorers.json", "w+") as f:
-            if self.ticker not in self.explorers:
+            if self.coin not in self.explorers:
                 rpcport = 46857 + explorer_index
                 zmqport = 50501 + explorer_index
                 webport = 8091 + explorer_index
                 self.explorers.update({
-                    self.ticker: {
+                    self.coin: {
                         "rpcip": "127.0.0.1",
                         "rpcport": rpcport,
                         "rpcuser": self.utils.get_random_string(),
@@ -100,19 +100,19 @@ class ConfigExplorer:
                 })
                 json.dump(self.explorers, f, indent=4)
 
-                rpcip = self.explorers[self.ticker]["rpcip"]
-                rpcport = self.explorers[self.ticker]["rpcport"]
-                rpcpassword = self.explorers[self.ticker]["rpcpassword"]
-                rpcuser = self.explorers[self.ticker]["rpcuser"]
-                webport = self.explorers[self.ticker]["webport"]
-                zmqport = self.explorers[self.ticker]["zmqport"]
+                rpcip = self.explorers[self.coin]["rpcip"]
+                rpcport = self.explorers[self.coin]["rpcport"]
+                rpcpassword = self.explorers[self.coin]["rpcpassword"]
+                rpcuser = self.explorers[self.coin]["rpcuser"]
+                webport = self.explorers[self.coin]["webport"]
+                zmqport = self.explorers[self.coin]["zmqport"]
                 
-                if self.ticker == "KMD":
+                if self.coin == "KMD":
                     coin_conf_path = const.KMD_CONF_PATH
                     coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
                 else:
-                    coin_conf_path = f"{const.KMD_CONF_PATH}/{self.ticker}"
-                    coin_conf_file = f"{const.KMD_CONF_PATH}/{self.ticker}/{self.ticker}.conf"
+                    coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
+                    coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
 
                 if not os.path.exists(coin_conf_path):
                     os.makedirs(coin_conf_path)
@@ -136,17 +136,17 @@ class ConfigExplorer:
                     f.write(f"zmqpubrawtx=tcp://{rpcip}:{zmqport}\n")
 
     def create_explorer_conf(self):
-        if self.ticker not in self.explorers:
-            self.create_daemon_conf(self.ticker)
+        if self.coin not in self.explorers:
+            self.create_daemon_conf(self.coin)
 
-        rpcip = self.explorers[self.ticker]["rpcip"]
-        rpcport = self.explorers[self.ticker]["rpcport"]
-        rpcpassword = self.explorers[self.ticker]["rpcpassword"]
-        rpcuser = self.explorers[self.ticker]["rpcuser"]
-        webport = self.explorers[self.ticker]["webport"]
-        zmqport = self.explorers[self.ticker]["zmqport"]
+        rpcip = self.explorers[self.coin]["rpcip"]
+        rpcport = self.explorers[self.coin]["rpcport"]
+        rpcpassword = self.explorers[self.coin]["rpcpassword"]
+        rpcuser = self.explorers[self.coin]["rpcuser"]
+        webport = self.explorers[self.coin]["webport"]
+        zmqport = self.explorers[self.coin]["zmqport"]
 
-        with open(f"{self.script_path}/{self.ticker}-explorer/bitcore-node.json", "w+") as f:
+        with open(f"{self.script_path}/{self.coin}-explorer/bitcore-node.json", "w+") as f:
             config = {
                 "network": "mainnet",
                 "port": webport,
@@ -178,15 +178,15 @@ class ConfigExplorer:
             json.dump(config, f, indent=4)
 
     def create_webaccess(self, noweb=False):
-        if self.ticker not in self.explorers:
-            self.create_daemon_conf(self.ticker)
+        if self.coin not in self.explorers:
+            self.create_daemon_conf(self.coin)
 
-        rpcip = self.explorers[self.ticker]["rpcip"]
-        rpcport = self.explorers[self.ticker]["rpcport"]
-        rpcpassword = self.explorers[self.ticker]["rpcpassword"]
-        rpcuser = self.explorers[self.ticker]["rpcuser"]
-        webport = self.explorers[self.ticker]["webport"]
-        zmqport = self.explorers[self.ticker]["zmqport"]
+        rpcip = self.explorers[self.coin]["rpcip"]
+        rpcport = self.explorers[self.coin]["rpcport"]
+        rpcpassword = self.explorers[self.coin]["rpcpassword"]
+        rpcuser = self.explorers[self.coin]["rpcuser"]
+        webport = self.explorers[self.coin]["webport"]
+        zmqport = self.explorers[self.coin]["zmqport"]
 
         if noweb:
             ip = 'localhost'
@@ -196,30 +196,30 @@ class ConfigExplorer:
             ip = self.utils.get_my_ip()
 
         logger.info(f"Visit http://{ip}:{webport} from another computer to access the explorer after starting it")
-        with open(f'{self.ticker}-webaccess', 'w') as f:
+        with open(f'{self.coin}-webaccess', 'w') as f:
             f.write(f"url=http://{ip}:{webport}\n")
             f.write(f"webport={webport}")
 
     def remove(self):
         with open(f"{self.script_path}/explorers.json", "w+") as f:
-            if self.ticker in self.explorers:
-                del self.explorers[self.ticker]
+            if self.coin in self.explorers:
+                del self.explorers[self.coin]
                 json.dump(self.explorers, f, indent=4)
-                logger.info(f"{self.ticker} removed from {self.script_path}/explorers.json")
-        for file in [f'{self.ticker}-webaccess', f'{self.ticker}-explorer-start.sh']:
+                logger.info(f"{self.coin} removed from {self.script_path}/explorers.json")
+        for file in [f'{self.coin}-webaccess', f'{self.coin}-explorer-start.sh']:
             try:
                 os.remove(file)
             except OSError as e:
                 logger.info(f"{file} does not exist, skipping...")
                 pass
         try:
-            os.remove(f'{self.ticker}-webaccess')
+            os.remove(f'{self.coin}-webaccess')
         except OSError as e:
-            logger.info(f"{f'{self.ticker}-webaccess'} does not exist, skipping...")
+            logger.info(f"{f'{self.coin}-webaccess'} does not exist, skipping...")
         try:
-            shutil.rmtree(f'{self.ticker}-explorer')
+            shutil.rmtree(f'{self.coin}-explorer')
         except OSError as e:
-            logger.info(f"{self.ticker}-explorer does not exist, skipping...")
+            logger.info(f"{self.coin}-explorer does not exist, skipping...")
 
 
 class ConfigNginx:
@@ -245,7 +245,7 @@ class ConfigNginx:
 
         explorer_port = os.getenv(f'{self.coin}_EXPLORER_PORT')
         if not explorer_port:
-            explorer_port = self.explorers[self.ticker]["webport"]
+            explorer_port = self.explorers[self.coin]["webport"]
         if not explorer_port:
             explorer_port = self.check_webaccess()
         if not explorer_port:
@@ -256,7 +256,7 @@ class ConfigNginx:
         self.create_serverblock(webroot, proxy_host, self.subdomain, explorer_port)
 
     def update_webaccess(self, port):
-        with open(f'{self.ticker}-webaccess', 'w') as f:
+        with open(f'{self.coin}-webaccess', 'w') as f:
             f.write(f"url=http://{self.subdomain}:{self.explorer_port}\n")
             f.write(f"webport={port}")
 
