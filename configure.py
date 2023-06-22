@@ -251,9 +251,10 @@ class ConfigNginx:
         if not explorer_port:
             explorer_port = input(f"Enter the {self.coin} explorer's port: ")
 
-        self.update_webaccess(self.subdomain, explorer_port)
-        self.update_explorers_config(self.subdomain, explorer_port)
-        self.create_serverblock(webroot, proxy_host, self.subdomain, explorer_port)
+        self.update_webaccess(explorer_port)
+        explorer = ConfigExplorer(self.coin)
+        explorer.update_explorers_config(self.subdomain, explorer_port)
+        self.create_serverblock(webroot, proxy_host, explorer_port)
 
     def update_webaccess(self, port):
         with open(f'{self.coin}-webaccess', 'w') as f:
@@ -268,7 +269,7 @@ class ConfigNginx:
                 if line.find("webport") > -1:
                     return line.split("=")[1]
 
-    def create_serverblock(self, webroot, proxy_host, subdomain, explorer_port):
+    def create_serverblock(self, webroot, proxy_host, explorer_port):
         blockname = f"{self.script_path}/nginx/{self.coin}-explorer.serverblock"
         with open(f"{self.script_path}/nginx/TEMPLATE.serverblock", "r") as r:
             with open(blockname, "w") as w:
@@ -276,7 +277,7 @@ class ConfigNginx:
                     line = line.replace("COIN", self.coin)
                     line = line.replace("HOMEDIR", self.home)
                     line = line.replace("WEBROOT", webroot)
-                    line = line.replace("SUBDOMAIN", subdomain)
+                    line = line.replace("SUBDOMAIN", self.subdomain)
                     line = line.replace("PROXY_HOST", proxy_host)
                     line = line.replace("EXPLORER_PORT", explorer_port)
                     w.write(f"{line}")
