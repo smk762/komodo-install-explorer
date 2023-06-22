@@ -14,12 +14,6 @@ else
     domain_name=$2
 fi
 
-sudo apt update
-sudo apt install -y snapd
-sudo snap install core; sudo snap refresh core
-sudo apt-get remove certbot -y
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 sudo certbot certonly -d ${domain_name} --nginx --non-interactive 
 
