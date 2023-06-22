@@ -66,7 +66,7 @@ class ConfigExplorer:
     def __init__(self, ticker):
         self.coin = ticker
         self.utils = Utils()
-        self.home = os.path.expanduser("~")
+        self.home = const.HOME_PATH
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.explorers = self.utils.get_explorers()
 
@@ -275,7 +275,7 @@ class ConfigNginx:
             with open(blockname, "w") as w:
                 for line in r.readlines():
                     line = line.replace("COIN", self.coin)
-                    line = line.replace("HOMEDIR", self.home)
+                    line = line.replace("HOMEDIR", const.HOME_PATH)
                     line = line.replace("WEBROOT", webroot)
                     line = line.replace("SUBDOMAIN", self.subdomain)
                     line = line.replace("PROXY_HOST", proxy_host)
