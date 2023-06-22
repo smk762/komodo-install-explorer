@@ -87,9 +87,9 @@ cd $CUR_DIR/explorer-notarized
 
 echo -e "$STEP_START[ * ]$STEP_END Updating Insight UI styles and logos for ${coin}..."
 cd $CUR_DIR/
-./update-styles.sh ${coin}
+./update-styles.sh "${coin}"
 
-launch=$(./configure.py get_launch_params ${coin})
+launch=$(./configure.py get_launch_params "${coin}")
 
 echo -e "Done! The next steps are optional..."
 echo -e "To generate SSL certificates, run $STEP_START ./setup-ssl.sh $STEP_END"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ -z ${coin} ]]; then
+if [[ -z ${1} ]]; then
     read -p "Enter coin ticker: " coin
 else
     coin=$1
