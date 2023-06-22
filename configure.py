@@ -119,7 +119,10 @@ class ConfigExplorer:
 
                 logger.info(f"Updating {coin_conf_file}")
                 with open(coin_conf_file, 'w') as f:
+                    f.write("txindex=1\n")
+                    f.write("spentindex=1\n")
                     f.write("addressindex=1\n")
+                    f.write("timestampindex=1\n")
                     f.write(f"rpcallowip={rpcip}\n")
                     f.write(f"rpcpassword={rpcpassword}\n")
                     f.write(f"rpcport={rpcport}\n")
@@ -127,13 +130,16 @@ class ConfigExplorer:
                     f.write("rpcworkqueue=256\n")
                     f.write("server=1\n")
                     f.write("showmetrics=0\n")
-                    f.write("spentindex=1\n")
-                    f.write("timestampindex=1\n")
-                    f.write("txindex=1\n")
                     f.write("uacomment=bitcore\n")
                     f.write(f"whitelist={rpcip}\n")
                     f.write(f"zmqpubhashblock=tcp://{rpcip}:{zmqport}\n")
                     f.write(f"zmqpubrawtx=tcp://{rpcip}:{zmqport}\n")
+                    f.write("addnode=77.75.121.138\n")
+                    f.write("addnode=209.222.101.247\n")
+                    f.write("addnode=103.195.100.32\n")
+                    f.write("addnode=104.238.221.61\n")
+                    f.write("addnode=199.127.60.142\n")
+
 
     def create_explorer_conf(self):
         if self.coin not in self.explorers:
