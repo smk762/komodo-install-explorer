@@ -21,7 +21,7 @@ sudo apt-get remove certbot -y
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
-sudo certbot certonly -d ${domain_name}
+sudo certbot certonly -d ${domain_name} --nginx --non-interactive 
 
 ./configure.py create_nginx_conf ${coin} ${domain_name}
 

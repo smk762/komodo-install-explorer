@@ -353,7 +353,7 @@ def main():
             subdomain = os.getenv(f'{ticker}_SUBDOMAIN')
         if not subdomain:
             subdomain = input(f"Enter the {ticker} explorer's subdomain name (e.g. kmd.explorer.io): ")
-            nginx = ConfigNginx(ticker, subdomain)
+        nginx = ConfigNginx(ticker, subdomain)
         nginx.setup()
     
     elif option == "get_launch_params":
