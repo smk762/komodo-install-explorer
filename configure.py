@@ -258,7 +258,7 @@ class ConfigNginx:
 
     def update_webaccess(self, port):
         with open(f'{self.coin}-webaccess', 'w') as f:
-            f.write(f"url=http://{self.subdomain}:{self.explorer_port}\n")
+            f.write(f"url=http://{self.subdomain}:{port}\n")
             f.write(f"webport={port}")
 
     def check_webaccess(self):
