@@ -83,62 +83,83 @@ class ConfigExplorer:
         explorer_index = len(self.explorers)
         logger.info(f"{explorer_index} existing explorers")
 
-        with open(f"{self.script_path}/explorers.json", "w+") as f:
-            if self.coin not in self.explorers:
-                rpcport = 46857 + explorer_index
-                zmqport = 50501 + explorer_index
-                webport = 8091 + explorer_index
+        if self.coin == "KMD":
+            coin_conf_path = const.KMD_CONF_PATH
+            coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
+        else:
+            coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
+            coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
+
+        if os.path.exists(coin_conf_file):
+            with open(coin_conf_file, 'r') as f:
+                lines = f.readlines()
+                conf_data = {}
+                for line in lines:
+                    k, v = line.split("=")
+                    conf_data.update({k.strip(): v.strip()})
+        elif not os.path.exists(coin_conf_path):
+            os.makedirs(coin_conf_path)
+        
+
+        if self.coin not in self.explorers:                
+            with open(f"{self.script_path}/explorers.json", "w+") as f:
+                if "rpcport" in conf_data:
+                    rpcport = conf_data["rpcport"]
+                else:                    
+                    rpcport = 46857 + explorer_index
+                if "zmqport" in conf_data:
+                    zmqport = conf_data["zmqport"]
+                else:
+                    zmqport = 50501 + explorer_index
+                if "webport" in conf_data:
+                    webport = conf_data["webport"]
+                else:
+                    webport = 8091 + explorer_index
+                if "rpcuser" in conf_data:
+                    rpcuser = conf_data["rpcuser"]
+                else:
+                    rpcuser = self.utils.get_random_string(28)
+                if "rpcpassword" in conf_data:
+                    rpcpassword = conf_data["rpcpassword"]
+                else:
+                    rpcpassword = self.utils.get_random_string(32)
+                    
+                    
                 self.explorers.update({
                     self.coin: {
                         "rpcip": "127.0.0.1",
                         "rpcport": rpcport,
-                        "rpcuser": self.utils.get_random_string(),
-                        "rpcpassword": self.utils.get_random_string(32),
+                        "rpcuser": rpcuser,
+                        "rpcpassword": rpcpassword,
                         "webport": webport,
                         "zmqport": zmqport
                     }
                 })
                 json.dump(self.explorers, f, indent=4)
+          
 
-                rpcip = self.explorers[self.coin]["rpcip"]
-                rpcport = self.explorers[self.coin]["rpcport"]
-                rpcpassword = self.explorers[self.coin]["rpcpassword"]
-                rpcuser = self.explorers[self.coin]["rpcuser"]
-                webport = self.explorers[self.coin]["webport"]
-                zmqport = self.explorers[self.coin]["zmqport"]
-                
-                if self.coin == "KMD":
-                    coin_conf_path = const.KMD_CONF_PATH
-                    coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
-                else:
-                    coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
-                    coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
-
-                if not os.path.exists(coin_conf_path):
-                    os.makedirs(coin_conf_path)
-
-                logger.info(f"Updating {coin_conf_file}")
-                with open(coin_conf_file, 'w') as f:
-                    f.write("txindex=1\n")
-                    f.write("spentindex=1\n")
-                    f.write("addressindex=1\n")
-                    f.write("timestampindex=1\n")
-                    f.write(f"rpcallowip={rpcip}\n")
-                    f.write(f"rpcpassword={rpcpassword}\n")
-                    f.write(f"rpcport={rpcport}\n")
-                    f.write(f"rpcuser={rpcuser}\n")
-                    f.write("rpcworkqueue=256\n")
-                    f.write("server=1\n")
-                    f.write("showmetrics=0\n")
-                    f.write("uacomment=bitcore\n")
-                    f.write(f"whitelist={rpcip}\n")
-                    f.write(f"zmqpubhashblock=tcp://{rpcip}:{zmqport}\n")
-                    f.write(f"zmqpubrawtx=tcp://{rpcip}:{zmqport}\n")
-                    f.write("addnode=77.75.121.138\n")
-                    f.write("addnode=209.222.101.247\n")
-                    f.write("addnode=103.195.100.32\n")
-                    f.write("addnode=104.238.221.61\n")
-                    f.write("addnode=199.127.60.142\n")
+            logger.info(f"Updating {coin_conf_file} for docker")
+            with open(coin_conf_file, 'w') as f:
+                f.write("server=1\n")
+                f.write("txindex=1\n")
+                f.write("spentindex=1\n")
+                f.write("addressindex=1\n")
+                f.write("timestampindex=1\n")
+                f.write("showmetrics=0\n")
+                f.write("uacomment=bitcore\n")
+                f.write(f"rpcpassword={rpcpassword}\n")
+                f.write(f"rpcport={rpcport}\n")
+                f.write(f"rpcuser={rpcuser}\n")
+                f.write(f"rpcbind=0.0.0.0:{rpcport}\n")
+                f.write("rpcallowip=0.0.0.0/0\n")
+                f.write("rpcworkqueue=256\n")
+                f.write(f"zmqpubhashblock=tcp://0.0.0.0:{zmqport}\n")
+                f.write(f"zmqpubrawtx=tcp://0.0.0.0:{zmqport}\n")
+                f.write("addnode=77.75.121.138\n")
+                f.write("addnode=209.222.101.247\n")
+                f.write("addnode=103.195.100.32\n")
+                f.write("addnode=104.238.221.61\n")
+                f.write("addnode=199.127.60.142\n")
 
 
     def create_explorer_conf(self):
