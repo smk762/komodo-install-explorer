@@ -10,7 +10,7 @@ CUR_DIR=$(pwd)
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
 
-echo -e "$STEP_START[ * ]$STEP_END Backing up old styles..."
+echo -e "$STEP_START[ * ]$STEP_END Backing up old styles for ${coin}..."
 if [ ! -f "${coin}-explorer/node_modules/insight-ui-komodo/public/css/main.min.css.original" ]; then
     echo "Backing up original css..."
     cp "${coin}-explorer/node_modules/insight-ui-komodo/public/css/main.min.css" "${coin}-explorer/node_modules/insight-ui-komodo/public/css/main.min.css.original"

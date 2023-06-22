@@ -18,7 +18,7 @@ LOCALHOST_ONLY = os.getenv(f'LOCALHOST_ONLY') in ['true', True]
 if not HOME_PATH:
     HOME_PATH = f'/home/{USERNAME}/'
 if not KMD_CONF_PATH:
-    KMD_CONF_PATH = f'/home/{USERNAME}/.komodo/'
+    KMD_CONF_PATH = f'/home/{USERNAME}/.komodo'
 if not KMD_ADDRESS:
     # S7 Dragonhound_DEV main notary address
     KMD_ADDRESS = "RHi882Amab35uXjqBZjVxgEgmkkMu454KK"

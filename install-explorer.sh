@@ -7,7 +7,7 @@
 if [[ -z ${1} ]]; then
     read -p "Enter coin ticker: " coin
 else
-    coin=$1
+    coin=${1}
 fi
 
 if [[ -z ${2} ]]; then
@@ -21,8 +21,8 @@ STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
 
 
-echo -e "$STEP_START[ * ]$STEP_END Stopping $coin daemon..."
-komodo-cli -ac_name=$coin stop
+echo -e "$STEP_START[ * ]$STEP_END Stopping ${coin} daemon..."
+komodo-cli -ac_name=${coin} stop
 
 echo -e "$STEP_START[ * ]$STEP_END Creating daemon conf file (with indexes) for $coin..."
 ./configure.py create_ticker_conf $coin
@@ -42,13 +42,13 @@ $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node install git+https://g
 cd $CUR_DIR
 
 echo -e "$STEP_START[ * ]$STEP_END Configuring explorer for $coin..."
-./configure.py create_explorer_conf $coin 
-./configure.py create_webaccess $coin $noweb
+./configure.py create_explorer_conf ${coin} 
+./configure.py create_webaccess ${coin} $noweb
 
 echo -e "$STEP_START[ * ]$STEP_END Creating systemd service files for $coin..."
 ./configure.py create_services $coin
 
-echo "Copying service files for $coin to /etc/systemd/system/..."
+echo "Copying service files for ${coin} to /etc/systemd/system/..."
 sudo cp services/$coin-explorer.service /etc/systemd/system/$coin-explorer.service
 sudo cp services/$coin-daemon.service /etc/systemd/system/$coin-daemon.service
 cd /etc/systemd/system/
@@ -84,15 +84,15 @@ fi
 cd $CUR_DIR/explorer-notarized
 ./patch.sh ${coin}
 
-echo -e "$STEP_START[ * ]$STEP_END Updating Insight UI styles and logos for $coin..."
+echo -e "$STEP_START[ * ]$STEP_END Updating Insight UI styles and logos for ${coin}..."
 cd $CUR_DIR/
-./update-styles.sh $coin
+./update-styles.sh ${coin}
 
-launch=$(./configure.py get_launch_params $coin)
+launch=$(./configure.py get_launch_params ${coin})
 
 echo -e "Done! The next steps are optional..."
 echo -e "To generate SSL certificates, run $STEP_START ./setup-ssl.sh $STEP_END"
-echo -e "To generate an NGINX serverblock config, run $STEP_START ./configure.py create_nginx_conf $coin $STEP_END"
-echo -e "To start the explorer, run $STEP_START ./start-explorer.sh $coin $STEP_END "
+echo -e "To generate an NGINX serverblock config, run $STEP_START ./configure.py create_nginx_conf ${coin} $STEP_END"
+echo -e "To start the explorer, run $STEP_START ./start-explorer.sh ${coin} $STEP_END "
 echo -e "Dont forget to relaunch the ${coin} daemon with the following launch parameters:"
 echo -e $STEP_START $launch $STEP_END
