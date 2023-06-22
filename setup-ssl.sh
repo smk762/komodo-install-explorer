@@ -25,5 +25,6 @@ sudo certbot certonly -d ${domain_name}
 
 ./configure.py create_nginx_conf ${coin} ${domain_name}
 
-sudo ln -s nginx/${coin}-explorer.serverblock /etc/nginx/sites-enabled/${coin}-explorer.serverblock
+sudo cp nginx/${coin}-explorer.serverblock /etc/nginx/sites-available/${coin}-explorer.serverblock
+sudo ln -s /etc/nginx/sites-available/${coin}-explorer.serverblock /etc/nginx/sites-enabled/${coin}-explorer.serverblock
 sudo systemctl restart nginx
