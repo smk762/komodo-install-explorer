@@ -226,11 +226,11 @@ class ConfigNginx:
     def __init__(self, coin, subdomain=""):
         self.utils = Utils()
         self.coin = coin
-        self.subdomain = subdomain
+        self.subdomain = subdomain.lower()
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.explorers = self.utils.get_explorers()
         if self.subdomain == "":
-            self.subdomain = self.get_subdomain(self.coin)
+            self.subdomain = input(f"Enter the {self.coin} explorer's subdomain: ")
 
     def setup(self):
         home = os.path.expanduser("~")
