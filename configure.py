@@ -253,7 +253,7 @@ class ConfigNginx:
 
         self.update_webaccess(explorer_port)
         explorer = ConfigExplorer(self.coin)
-        explorer.create_explorer_conf(self.subdomain, explorer_port)
+        explorer.create_explorer_conf()
         self.create_serverblock(webroot, proxy_host, explorer_port)
 
     def update_webaccess(self, port):
