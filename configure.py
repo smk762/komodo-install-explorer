@@ -137,7 +137,7 @@ class ConfigExplorer:
 
     def create_explorer_conf(self):
         if self.coin not in self.explorers:
-            self.create_daemon_conf(self.coin)
+            self.create_daemon_conf()
 
         rpcip = self.explorers[self.coin]["rpcip"]
         rpcport = self.explorers[self.coin]["rpcport"]
@@ -179,7 +179,7 @@ class ConfigExplorer:
 
     def create_webaccess(self, noweb=False):
         if self.coin not in self.explorers:
-            self.create_daemon_conf(self.coin)
+            self.create_daemon_conf()
 
         rpcip = self.explorers[self.coin]["rpcip"]
         rpcport = self.explorers[self.coin]["rpcport"]
