@@ -42,7 +42,7 @@ if [ ! -d "${HOME}/notary_docker_main/komodo-install-explorer/${coin}-explorer/n
 fi
 
 echo -e "$STEP_START[ * ]$STEP_END Configuring explorer for $coin..."
-./configure.py create_explorer_conf ${coin} 
+./configure.py create_explorer_conf ${coin}
 ./configure.py create_webaccess ${coin} $noweb
 
 echo -e "$STEP_START[ * ]$STEP_END Creating systemd service files for $coin..."

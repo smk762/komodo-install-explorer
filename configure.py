@@ -106,7 +106,6 @@ class ConfigExplorer:
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.project_root = Path(self.script_path).parent
         self.utils = Utils()
-        self.explorers = self.utils.get_explorers()
 
     def create_launcher(self):
         with open(f"{self.coin}-explorer-start.sh", "w") as f:
@@ -132,11 +131,12 @@ class ConfigExplorer:
             zmqport = coin_ports[self.coin]["zmqport"]
             webport = coin_ports[self.coin]["webport"]
 
-        if self.coin not in self.explorers:
-            self.explorers.update({self.coin: {}})
+        explorers = self.utils.get_explorers()
+        if self.coin not in explorers:
+            explorers.update({self.coin: {}})
         rpcip = "127.0.0.1"
         with open(f"{self.script_path}/explorers.json", "w+") as f:
-            self.explorers[self.coin].update(
+            explorers[self.coin].update(
                 {
                     "rpcip": rpcip,
                     "rpcport": rpcport,
@@ -146,8 +146,8 @@ class ConfigExplorer:
                     "zmqport": zmqport,
                 }
             )
-            json.dump(self.explorers, f, indent=4)
-            explorer_index = len(self.explorers)
+            json.dump(explorers, f, indent=4)
+            explorer_index = len(explorers)
             logger.info(f"{explorer_index} explorers configured")
 
         with open(
@@ -217,10 +217,11 @@ class ConfigExplorer:
             f.write(f"webport={webport}")
 
     def remove(self):
+        explorers = self.utils.get_explorers()
         with open(f"{self.script_path}/explorers.json", "w+") as f:
-            if self.coin in self.explorers:
-                del self.explorers[self.coin]
-                json.dump(self.explorers, f, indent=4)
+            if self.coin in explorers:
+                del explorers[self.coin]
+                json.dump(explorers, f, indent=4)
                 logger.info(
                     f"{self.coin} removed from {self.script_path}/explorers.json"
                 )
@@ -247,7 +248,6 @@ class ConfigNginx:
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.project_root = Path(self.script_path).parent
         self.utils = Utils()
-        self.explorers = self.utils.get_explorers()
         if self.subdomain == "":
             self.subdomain = input(f"Enter the {self.coin} explorer's subdomain: ")
 
@@ -312,7 +312,6 @@ class ConfigServices:
         self.launch_params = (
             f"{self.utils.get_launch_params(self.coin)} -pubkey=${self.pubkey}"
         )
-        self.explorers = self.utils.get_explorers()
         if not os.path.exists(f"{const.HOME_PATH}/logs"):
             os.makedirs(f"{const.HOME_PATH}/logs")
 
