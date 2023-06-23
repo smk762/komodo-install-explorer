@@ -29,13 +29,17 @@ export NVM_DIR="$HOME/.nvm"
 nvm use v4
 
 echo -e "$STEP_START[ * ]$STEP_END Installing Bitcore node for $coin..."
-mkdir -p node_modules
-$CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node create ${coin}-explorer
+if [ ! -d "${HOME}/notary_docker_main/komodo-install-explorer/${coin}-explorer" ]; then
+  mkdir -p node_modules
+  $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node create ${coin}-explorer
+fi
 
 echo -e "$STEP_START[ * ]$STEP_END Installing Insight API and Insight UI for $coin..."
-cd ${coin}-explorer
-$CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node install git+https://git@github.com/DeckerSU/insight-api-komodo git+https://git@github.com/DeckerSU/insight-ui-komodo
-cd $CUR_DIR
+if [ ! -d "${HOME}/notary_docker_main/komodo-install-explorer/${coin}-explorer/node_modules/insight-api-komodo" ]; then
+  cd ${coin}-explorer
+  $CUR_DIR/node_modules/bitcore-node-komodo/bin/bitcore-node install git+https://git@github.com/DeckerSU/insight-api-komodo git+https://git@github.com/DeckerSU/insight-ui-komodo
+  cd $CUR_DIR
+fi
 
 echo -e "$STEP_START[ * ]$STEP_END Configuring explorer for $coin..."
 ./configure.py create_explorer_conf ${coin} 
