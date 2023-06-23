@@ -17,10 +17,10 @@ fi
 sudo certbot certonly -d ${domain_name} --nginx --non-interactive 
 
 ./configure.py create_nginx_conf ${coin} ${domain_name}
-if test -f "/etc/letsencrypt/live/${domain_name}/fullchain.pem"; then
+if sudo test -f "/etc/letsencrypt/live/${domain_name}/fullchain.pem"; then
     sudo cp nginx/${coin}-explorer.serverblock /etc/nginx/sites-available/${coin}-explorer.serverblock
     sudo ln -s /etc/nginx/sites-available/${coin}-explorer.serverblock /etc/nginx/sites-enabled/${coin}-explorer.serverblock
     sudo systemctl restart nginx
 else
-    echo "SSL certificate not found. Please check if the domain name is correct and if the certificate was created."
+    echo "SSL certificate [/etc/letsencrypt/live/${domain_name}/fullchain.pem] not found. Please check if the domain name [${domain_name}] is correct and if the certificate was created."
 fi
