@@ -72,7 +72,7 @@ class Utils:
             return {}
 
     def get_coin_conf(self, coin):        
-        coin_conf_file = self.utils.get_coin_conf_file(coin)
+        coin_conf_file = self.get_coin_conf_file(coin)
         conf_data = {}
         if os.path.exists(coin_conf_file):
             with open(coin_conf_file, 'r') as f:
