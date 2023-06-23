@@ -67,12 +67,12 @@ class Utils:
                             "zmqport": coin_ports[coin]["zmqport"],
                             "webport": coin_ports[coin]["webport"]
                         })
-                return 
+                return explorers
         except:
             return {}
 
-    def get_coin_conf(self):        
-        coin_conf_file = self.utils.get_coin_conf_file()
+    def get_coin_conf(self, coin):        
+        coin_conf_file = self.utils.get_coin_conf_file(coin)
         conf_data = {}
         if os.path.exists(coin_conf_file):
             with open(coin_conf_file, 'r') as f:
@@ -110,10 +110,7 @@ class ConfigExplorer:
             f.write('nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n')
         os.chmod(f"{self.coin}-explorer-start.sh", stat.S_IRWXU)
 
-
     def create_explorer_conf(self):
-        explorer_index = len(self.explorers)
-        logger.info(f"{explorer_index} existing explorers")
 
         conf_data = self.utils.get_coin_conf(self.coin)
         rpcuser = conf_data["rpcuser"]
@@ -138,6 +135,8 @@ class ConfigExplorer:
                 "zmqport": zmqport
             })
             json.dump(self.explorers, f, indent=4)
+            explorer_index = len(self.explorers)
+            logger.info(f"{explorer_index} explorers configured")
 
         with open(f"{self.script_path}/{self.coin}-explorer/bitcore-node.json", "w+") as f:
             config = {
