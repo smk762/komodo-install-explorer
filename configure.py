@@ -126,7 +126,7 @@ class ConfigExplorer:
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
-        with open(f"{self.project_root}/coin_ports.json", "w+") as f:
+        with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
             rpcport = coin_ports["rpcport"]
             zmqport = coin_ports["zmqport"]
@@ -190,7 +190,7 @@ class ConfigExplorer:
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
-        with open(f"{self.project_root}/coin_ports.json", "w+") as f:
+        with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
             rpcport = coin_ports["rpcport"]
             zmqport = coin_ports["zmqport"]
@@ -258,7 +258,7 @@ class ConfigNginx:
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
-        with open(f"{self.project_root}/coin_ports.json", "w+") as f:
+        with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
             rpcport = coin_ports["rpcport"]
             zmqport = coin_ports["zmqport"]
