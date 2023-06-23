@@ -128,9 +128,9 @@ class ConfigExplorer:
 
         with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
-            rpcport = coin_ports["rpcport"]
-            zmqport = coin_ports["zmqport"]
-            webport = coin_ports["webport"]
+            rpcport = coin_ports[self.coin]["rpcport"]
+            zmqport = coin_ports[self.coin]["zmqport"]
+            webport = coin_ports[self.coin]["webport"]
 
         if self.coin not in self.explorers:
             self.explorers.update({self.coin: {}})
@@ -192,9 +192,9 @@ class ConfigExplorer:
 
         with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
-            rpcport = coin_ports["rpcport"]
-            zmqport = coin_ports["zmqport"]
-            webport = coin_ports["webport"]
+            rpcport = coin_ports[self.coin]["rpcport"]
+            zmqport = coin_ports[self.coin]["zmqport"]
+            webport = coin_ports[self.coin]["webport"]
 
         rpcip = "127.0.0.1"
 
@@ -260,9 +260,9 @@ class ConfigNginx:
 
         with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
-            rpcport = coin_ports["rpcport"]
-            zmqport = coin_ports["zmqport"]
-            webport = coin_ports["webport"]
+            rpcport = coin_ports[self.coin]["rpcport"]
+            zmqport = coin_ports[self.coin]["zmqport"]
+            webport = coin_ports[self.coin]["webport"]
 
         rpcip = "127.0.0.1"
         webroot = f"{home}/insight"
