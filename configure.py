@@ -55,11 +55,42 @@ class Utils:
             return {}
 
     def get_explorers(self):
+        with open(f"{self.script_path}/../coin_ports.json", "r") as f:
+            coin_ports = json.load(f)
         try:
             with open(f"{self.script_path}/explorers.json", "r") as f:
-                return json.load(f)
+                explorers = json.load(f)
+                for coin in explorers:
+                    if coin in coin_ports:
+                        explorers[coin].update({
+                            "rpcport": coin_ports[coin]["rpcport"],
+                            "zmqport": coin_ports[coin]["zmqport"],
+                            "webport": coin_ports[coin]["webport"]
+                        })
+                return 
         except:
             return {}
+
+    def get_coin_conf(self):        
+        coin_conf_file = self.utils.get_coin_conf_file()
+        conf_data = {}
+        if os.path.exists(coin_conf_file):
+            with open(coin_conf_file, 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    k, v = line.split("=")
+                    conf_data.update({k.strip(): v.strip()})
+        return conf_data
+
+    def get_coin_conf_file(self, coin):
+        if self.coin == "KMD":
+            coin_conf_path = const.KMD_CONF_PATH
+            coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
+        else:
+            coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
+            coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
+        if not os.path.exists(coin_conf_path):
+            os.makedirs(coin_conf_path)
 
 
 class ConfigExplorer:
@@ -79,91 +110,34 @@ class ConfigExplorer:
             f.write('nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n')
         os.chmod(f"{self.coin}-explorer-start.sh", stat.S_IRWXU)
 
-    def get_coin_conf(self, coin_conf_file):
-        conf_data = {}
-        with open(coin_conf_file, 'r') as f:
-            lines = f.readlines()
-            for line in lines:
-                k, v = line.split("=")
-                conf_data.update({k.strip(): v.strip()})
-        return conf_data
 
-    def create_daemon_conf(self):
+    def create_explorer_conf(self):
         explorer_index = len(self.explorers)
         logger.info(f"{explorer_index} existing explorers")
 
-        if self.coin == "KMD":
-            coin_conf_path = const.KMD_CONF_PATH
-            coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
-        else:
-            coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
-            coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
-
-        if os.path.exists(coin_conf_file):
-            conf_data = self.get_coin_conf(coin_conf_file)
-        elif not os.path.exists(coin_conf_path):
-            os.makedirs(coin_conf_path)
+        conf_data = self.utils.get_coin_conf(self.coin)
+        rpcuser = conf_data["rpcuser"]
+        rpcpassword = conf_data["rpcpassword"]
             
         with open(f"{self.script_path}/../coin_ports.json", "w+") as f:
-            coin_ports = json.load(f)        
+            coin_ports = json.load(f)
+            rpcport = coin_ports["rpcport"]
+            zmqport = coin_ports["zmqport"]
+            webport = coin_ports["webport"]
 
-        if self.coin not in self.explorers:                
-            with open(f"{self.script_path}/explorers.json", "w+") as f:
-                
-                rpcport = coin_ports["rpcport"]
-                zmqport = coin_ports["zmqport"]
-                webport = coin_ports["webport"]
-                rpcuser = self.utils.get_random_string(28)
-                rpcpassword = self.utils.get_random_string(32)
-                    
-                    
-                self.explorers.update({
-                    self.coin: {
-                        "rpcip": "127.0.0.1",
-                        "rpcport": rpcport,
-                        "rpcuser": rpcuser,
-                        "rpcpassword": rpcpassword,
-                        "webport": webport,
-                        "zmqport": zmqport
-                    }
-                })
-                json.dump(self.explorers, f, indent=4)
-          
-
-            logger.info(f"Updating {coin_conf_file} for docker")
-            with open(coin_conf_file, 'w') as f:
-                f.write("server=1\n")
-                f.write("txindex=1\n")
-                f.write("spentindex=1\n")
-                f.write("addressindex=1\n")
-                f.write("timestampindex=1\n")
-                f.write("showmetrics=0\n")
-                f.write("uacomment=bitcore\n")
-                f.write(f"rpcpassword={rpcpassword}\n")
-                f.write(f"rpcport={rpcport}\n")
-                f.write(f"rpcuser={rpcuser}\n")
-                f.write(f"rpcbind=0.0.0.0:{rpcport}\n")
-                f.write("rpcallowip=0.0.0.0/0\n")
-                f.write("rpcworkqueue=256\n")
-                f.write(f"zmqpubhashblock=tcp://0.0.0.0:{zmqport}\n")
-                f.write(f"zmqpubrawtx=tcp://0.0.0.0:{zmqport}\n")
-                f.write("addnode=77.75.121.138\n")
-                f.write("addnode=209.222.101.247\n")
-                f.write("addnode=103.195.100.32\n")
-                f.write("addnode=104.238.221.61\n")
-                f.write("addnode=199.127.60.142\n")
-
-
-    def create_explorer_conf(self):
         if self.coin not in self.explorers:
-            self.create_daemon_conf()
-
-        rpcip = self.explorers[self.coin]["rpcip"]
-        rpcport = self.explorers[self.coin]["rpcport"]
-        rpcpassword = self.explorers[self.coin]["rpcpassword"]
-        rpcuser = self.explorers[self.coin]["rpcuser"]
-        webport = self.explorers[self.coin]["webport"]
-        zmqport = self.explorers[self.coin]["zmqport"]
+            self.explorers.update({self.coin: {}})
+        rpcip = "127.0.0.1"
+        with open(f"{self.script_path}/explorers.json", "w+") as f:
+            self.explorers[self.coin].update({
+                "rpcip": rpcip,
+                "rpcport": rpcport,
+                "rpcuser": rpcuser,
+                "rpcpassword": rpcpassword,
+                "webport": webport,
+                "zmqport": zmqport
+            })
+            json.dump(self.explorers, f, indent=4)
 
         with open(f"{self.script_path}/{self.coin}-explorer/bitcore-node.json", "w+") as f:
             config = {
@@ -197,8 +171,6 @@ class ConfigExplorer:
             json.dump(config, f, indent=4)
 
     def create_webaccess(self, noweb=False):
-        if self.coin not in self.explorers:
-            self.create_daemon_conf()
 
         rpcip = self.explorers[self.coin]["rpcip"]
         rpcport = self.explorers[self.coin]["rpcport"]
@@ -337,7 +309,7 @@ class ConfigServices:
 def main():
     # TODO: Update .env file?
     options = [
-        "create_nginx_conf", "create_services", "create_ticker_conf",
+        "create_nginx_conf", "create_services",
         "create_explorer_conf", "create_webaccess", "get_launch_params",
         "remove", "exit"        
     ]
@@ -386,8 +358,6 @@ def main():
 
     else:
         config = ConfigExplorer(ticker)
-        if option == "create_ticker_conf":
-            config.create_daemon_conf()
 
         elif option == "create_explorer_conf":
             config.create_explorer_conf()

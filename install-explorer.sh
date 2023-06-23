@@ -20,12 +20,8 @@ CUR_DIR=$(pwd)
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
 
-
 echo -e "$STEP_START[ * ]$STEP_END Stopping ${coin} daemon..."
 komodo-cli -ac_name=${coin} stop
-
-echo -e "$STEP_START[ * ]$STEP_END Creating daemon conf file (with indexes) for $coin..."
-./configure.py create_ticker_conf $coin
 
 echo -e "$STEP_START[ * ]$STEP_END Loading NVM and Node 4..."
 export NVM_DIR="$HOME/.nvm"
