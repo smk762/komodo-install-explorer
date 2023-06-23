@@ -359,7 +359,7 @@ def main():
     else:
         config = ConfigExplorer(ticker)
 
-        elif option == "create_explorer_conf":
+        if option == "create_explorer_conf":
             config.create_explorer_conf()
             config.create_launcher()
 
