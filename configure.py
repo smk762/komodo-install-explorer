@@ -102,10 +102,10 @@ class Utils:
 class ConfigExplorer:
     def __init__(self, ticker):
         self.coin = ticker
-        self.utils = Utils()
         self.home = const.HOME_PATH
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.project_root = Path(self.script_path).parent
+        self.utils = Utils()
         self.explorers = self.utils.get_explorers()
 
     def create_launcher(self):
@@ -242,11 +242,11 @@ class ConfigExplorer:
 
 class ConfigNginx:
     def __init__(self, coin, subdomain=""):
-        self.utils = Utils()
         self.coin = coin
         self.subdomain = subdomain.lower()
         self.script_path = os.path.realpath(os.path.dirname(__file__))
         self.project_root = Path(self.script_path).parent
+        self.utils = Utils()
         self.explorers = self.utils.get_explorers()
         if self.subdomain == "":
             self.subdomain = input(f"Enter the {self.coin} explorer's subdomain: ")
@@ -306,13 +306,12 @@ class ConfigServices:
         self.coin = coin
         self.address = address
         self.pubkey = pubkey
+        self.script_path = os.path.realpath(os.path.dirname(__file__))
+        self.project_root = Path(self.script_path).parent
         self.utils = Utils()
         self.launch_params = (
             f"{self.utils.get_launch_params(self.coin)} -pubkey=${self.pubkey}"
         )
-        self.script_path = os.path.realpath(os.path.dirname(__file__))
-        
-        self.project_root = Path(self.script_path).parent
         self.explorers = self.utils.get_explorers()
         if not os.path.exists(f"{const.HOME_PATH}/logs"):
             os.makedirs(f"{const.HOME_PATH}/logs")
