@@ -79,6 +79,15 @@ class ConfigExplorer:
             f.write('nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n')
         os.chmod(f"{self.coin}-explorer-start.sh", stat.S_IRWXU)
 
+    def get_coin_conf(self, coin_conf_file):
+        conf_data = {}
+        with open(coin_conf_file, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                k, v = line.split("=")
+                conf_data.update({k.strip(): v.strip()})
+        return conf_data
+
     def create_daemon_conf(self):
         explorer_index = len(self.explorers)
         logger.info(f"{explorer_index} existing explorers")
@@ -91,18 +100,12 @@ class ConfigExplorer:
             coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
 
         if os.path.exists(coin_conf_file):
-            with open(coin_conf_file, 'r') as f:
-                lines = f.readlines()
-                conf_data = {}
-                for line in lines:
-                    k, v = line.split("=")
-                    conf_data.update({k.strip(): v.strip()})
+            conf_data = self.get_coin_conf(coin_conf_file)
         elif not os.path.exists(coin_conf_path):
             os.makedirs(coin_conf_path)
             
         with open(f"{self.script_path}/../coin_ports.json", "w+") as f:
-            coin_ports = const.COIN_PORTS[self.coin]
-        
+            coin_ports = json.load(f)        
 
         if self.coin not in self.explorers:                
             with open(f"{self.script_path}/explorers.json", "w+") as f:
