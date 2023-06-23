@@ -20,29 +20,37 @@ sudo apt --yes install libssl-dev libcurl4-gnutls-dev libsodium-dev libzmq3-dev 
 sudo apt --yes install python python2 python3 python3-pip python3-venv nginx libcurl4-openssl-dev
 sudo ln -s $(which python2) /usr/bin/python
 
-# Install snap and certbot
-sudo apt update
-sudo apt install -y snapd
-sudo snap install core; sudo snap refresh core
-sudo apt-get remove certbot -y
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+certbot=$(certbot --version)
+if [[ ! "$certbot" == "certbot 2.6.0" ]]
+    # Install snap and certbot
+    sudo apt update
+    sudo apt install -y snapd
+    sudo snap install core; sudo snap refresh core
+    sudo apt-get remove certbot -y
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+fi
 
 # Install python dependencies
 echo -e "$STEP_START[ * ]$STEP_END Installing Python dependencies"
 pip3 install -r requirements.txt
 
 # install nvm
-echo -e "$STEP_START[ * ]$STEP_END Installing NodeJS"
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.39.3/install.sh | bash
+nvm_version=$(nvm -v)
+if [[ ! "$nvm_version" = "0.39.3" ]]; then
+    echo -e "$STEP_START[ * ]$STEP_END Installing NodeJS"
+    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.39.3/install.sh | bash
+fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 echo $(which make)
 echo $(python -V)
 
-# switch node setup with nvm
-echo -e "$STEP_START[ * ]$STEP_END Installing Bitcore Node"
-nvm install v4
-mkdir -p node_modules
-npm install git+https://git@github.com/DeckerSU/bitcore-node-komodo # npm install bitcore
+if [ ! -d "${HOME}/notary_docker_main/komodo-install-explorer/node_modules/bitcore-node-komodo" ]; then
+    # switch node setup with nvm
+    echo -e "$STEP_START[ * ]$STEP_END Installing Bitcore Node"
+    nvm install v4
+    mkdir -p node_modules
+    npm install git+https://git@github.com/DeckerSU/bitcore-node-komodo # npm install bitcore
+fi
 
