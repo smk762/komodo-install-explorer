@@ -10,8 +10,8 @@ StartLimitIntervalSec=60
 StartLimitBurst=5
 
 [Service]
-WorkingDirectory=/home/USERNAME/komodo-install-explorer
-ExecStart=/home/USERNAME/komodo-install-explorer/COIN-explorer-start.sh
+WorkingDirectory=/home/USERNAME/docker_notary_main/komodo-install-explorer
+ExecStart=/home/USERNAME/docker_notary_main/komodo-install-explorer/COIN-explorer-start.sh
 
 # Logs path
 StandardOutput=append:/home/USERNAME/logs/COIN_explorer.log
