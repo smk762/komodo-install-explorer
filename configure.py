@@ -135,24 +135,24 @@ class ConfigExplorer:
         if self.coin not in explorers:
             explorers.update({self.coin: {}})
         rpcip = "127.0.0.1"
-        with open(f"{self.script_path}/explorers.json", "w+") as f:
-            explorers[self.coin].update(
-                {
-                    "rpcip": rpcip,
-                    "rpcport": rpcport,
-                    "rpcuser": rpcuser,
-                    "rpcpassword": rpcpassword,
-                    "webport": webport,
-                    "zmqport": zmqport,
-                }
-            )
-            json.dump(explorers, f, indent=4)
-            explorer_index = len(explorers)
-            logger.info(f"{explorer_index} explorers configured")
+        explorers[self.coin].update(
+            {
+                "rpcip": rpcip,
+                "rpcport": rpcport,
+                "rpcuser": rpcuser,
+                "rpcpassword": rpcpassword,
+                "webport": webport,
+                "zmqport": zmqport,
+            }
+        )
+        self.save_explorers(explorers)
+        explorer_index = len(explorers)
+        logger.info(f"{explorer_index} explorers configured")
+        self.save_bitcore_conf(webport, rpcip, rpcport, rpcuser, rpcpassword, zmqport)
 
-        with open(
-            f"{self.script_path}/{self.coin}-explorer/bitcore-node.json", "w+"
-        ) as f:
+    def save_bitcore_conf(self, webport, rpcip, rpcport, rpcuser, rpcpassword, zmqport):
+        bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
+        with open(bitcore_conf, "w+") as f:
             config = {
                 "network": "mainnet",
                 "port": webport,
@@ -180,10 +180,16 @@ class ConfigExplorer:
                             "whitelistLimit": 500000,
                             "whitelistInterval": 3600000,
                         }
-                    },
-                },
+                    }
+                }
             }
             json.dump(config, f, indent=4)
+            logger.info(f"Updated bitcore-node.json for {self.coin}")
+
+    def save_explorers(self, explorers):
+        with open(f"{self.script_path}/explorers.json", "w+") as f:
+            json.dump(explorers, f, indent=4)
+            logger.info(f"Updated explorers.json")
 
     def create_webaccess(self, noweb=False):
         conf_data = self.utils.get_coin_conf(self.coin)
@@ -197,7 +203,6 @@ class ConfigExplorer:
             webport = coin_ports[self.coin]["webport"]
 
         rpcip = "127.0.0.1"
-
         if noweb:
             ip = "localhost"
             logger.info(
@@ -216,27 +221,24 @@ class ConfigExplorer:
             f.write(f"url=http://{ip}:{webport}\n")
             f.write(f"webport={webport}")
 
+
     def remove(self):
         explorers = self.utils.get_explorers()
-        with open(f"{self.script_path}/explorers.json", "w+") as f:
-            if self.coin in explorers:
-                del explorers[self.coin]
-                json.dump(explorers, f, indent=4)
-                logger.info(
-                    f"{self.coin} removed from {self.script_path}/explorers.json"
-                )
+        if self.coin in explorers:
+            del explorers[self.coin]
+            logger.info(f"{self.coin} removed from {self.script_path}/explorers.json")
+        self.save_explorers(explorers)
+
         for file in [f"{self.coin}-webaccess", f"{self.coin}-explorer-start.sh"]:
             try:
                 os.remove(file)
+                logger.info(f"Removed {file}...")
             except OSError as e:
                 logger.info(f"{file} does not exist, skipping...")
                 pass
         try:
-            os.remove(f"{self.coin}-webaccess")
-        except OSError as e:
-            logger.info(f"{f'{self.coin}-webaccess'} does not exist, skipping...")
-        try:
             shutil.rmtree(f"{self.coin}-explorer")
+            logger.info(f"Removed {self.coin}-explorer...")
         except OSError as e:
             logger.info(f"{self.coin}-explorer does not exist, skipping...")
 
