@@ -83,12 +83,12 @@ class Utils:
         return conf_data
 
     def get_coin_conf_file(self, coin):
-        if self.coin == "KMD":
+        if coin == "KMD":
             coin_conf_path = const.KMD_CONF_PATH
             coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
         else:
-            coin_conf_path = f"{const.KMD_CONF_PATH}/{self.coin}"
-            coin_conf_file = f"{const.KMD_CONF_PATH}/{self.coin}/{self.coin}.conf"
+            coin_conf_path = f"{const.KMD_CONF_PATH}/{coin}"
+            coin_conf_file = f"{const.KMD_CONF_PATH}/{coin}/{coin}.conf"
         if not os.path.exists(coin_conf_path):
             os.makedirs(coin_conf_path)
 
