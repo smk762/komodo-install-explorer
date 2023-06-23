@@ -172,12 +172,17 @@ class ConfigExplorer:
 
     def create_webaccess(self, noweb=False):
 
-        rpcip = self.explorers[self.coin]["rpcip"]
-        rpcport = self.explorers[self.coin]["rpcport"]
-        rpcpassword = self.explorers[self.coin]["rpcpassword"]
-        rpcuser = self.explorers[self.coin]["rpcuser"]
-        webport = self.explorers[self.coin]["webport"]
-        zmqport = self.explorers[self.coin]["zmqport"]
+        conf_data = self.utils.get_coin_conf(self.coin)
+        rpcuser = conf_data["rpcuser"]
+        rpcpassword = conf_data["rpcpassword"]
+            
+        with open(f"{self.script_path}/../coin_ports.json", "w+") as f:
+            coin_ports = json.load(f)
+            rpcport = coin_ports["rpcport"]
+            zmqport = coin_ports["zmqport"]
+            webport = coin_ports["webport"]
+            
+        rpcip = "127.0.0.1"
 
         if noweb:
             ip = 'localhost'
@@ -225,27 +230,26 @@ class ConfigNginx:
 
     def setup(self):
         home = os.path.expanduser("~")
-        webroot = os.getenv(f'{self.coin}_WEBROOT')
-        if not webroot:
-            webroot = f"{home}/insight"
-            os.makedirs(webroot, exist_ok=True)
+        
+        conf_data = self.utils.get_coin_conf(self.coin)
+        rpcuser = conf_data["rpcuser"]
+        rpcpassword = conf_data["rpcpassword"]
+            
+        with open(f"{self.script_path}/../coin_ports.json", "w+") as f:
+            coin_ports = json.load(f)
+            rpcport = coin_ports["rpcport"]
+            zmqport = coin_ports["zmqport"]
+            webport = coin_ports["webport"]
+            
+        rpcip = "127.0.0.1"
+        webroot = f"{home}/insight"
+        os.makedirs(webroot, exist_ok=True)
+        proxy_host = '127.0.0.1'
 
-        proxy_host = os.getenv(f'{self.coin}_PROXY_PASS_HOST')
-        if not proxy_host:
-            proxy_host = '127.0.0.1'
-
-        explorer_port = os.getenv(f'{self.coin}_EXPLORER_PORT')
-        if not explorer_port:
-            explorer_port = self.explorers[self.coin]["webport"]
-        if not explorer_port:
-            explorer_port = self.check_webaccess()
-        if not explorer_port:
-            explorer_port = input(f"Enter the {self.coin} explorer's port: ")
-
-        self.update_webaccess(explorer_port)
+        self.update_webaccess(webport)
         explorer = ConfigExplorer(self.coin)
         explorer.create_explorer_conf()
-        self.create_serverblock(webroot, proxy_host, explorer_port)
+        self.create_serverblock(webroot, proxy_host, webport)
 
     def update_webaccess(self, port):
         with open(f'{self.coin}-webaccess', 'w') as f:
