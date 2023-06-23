@@ -152,6 +152,15 @@ class ConfigExplorer:
 
     def save_bitcore_conf(self, webport, rpcip, rpcport, rpcuser, rpcpassword, zmqport):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
+        logger.info(f"coin: {self.coin}")
+        logger.info(f"bitcore_conf: {bitcore_conf}")
+        logger.info(f"webport: {webport}")
+        logger.info(f"rpcip: {rpcip}")
+        logger.info(f"rpcport: {rpcport}")
+        logger.info(f"rpcuser: {rpcuser}")
+        logger.info(f"rpcpassword: {rpcpassword}")
+        logger.info(f"zmqport: {zmqport}")
+        
         with open(bitcore_conf, "w+") as f:
             config = {
                 "network": "mainnet",
@@ -184,7 +193,7 @@ class ConfigExplorer:
                 }
             }
             json.dump(config, f, indent=4)
-            logger.info(f"Updated bitcore-node.json for {self.coin}")
+            logger.info(f"Updated {bitcore_conf} for {self.coin}")
 
     def save_explorers(self, explorers):
         with open(f"{self.script_path}/explorers.json", "w+") as f:
