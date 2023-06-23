@@ -91,6 +91,7 @@ class Utils:
             coin_conf_file = f"{const.KMD_CONF_PATH}/{coin}/{coin}.conf"
         if not os.path.exists(coin_conf_path):
             os.makedirs(coin_conf_path)
+        return coin_conf_file
 
 
 class ConfigExplorer:
