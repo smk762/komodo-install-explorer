@@ -99,30 +99,19 @@ class ConfigExplorer:
                     conf_data.update({k.strip(): v.strip()})
         elif not os.path.exists(coin_conf_path):
             os.makedirs(coin_conf_path)
+            
+        with open(f"{self.script_path}/../coin_ports.json", "w+") as f:
+            coin_ports = const.COIN_PORTS[self.coin]
         
 
         if self.coin not in self.explorers:                
             with open(f"{self.script_path}/explorers.json", "w+") as f:
-                if "rpcport" in conf_data:
-                    rpcport = conf_data["rpcport"]
-                else:                    
-                    rpcport = 46857 + explorer_index
-                if "zmqport" in conf_data:
-                    zmqport = conf_data["zmqport"]
-                else:
-                    zmqport = 50501 + explorer_index
-                if "webport" in conf_data:
-                    webport = conf_data["webport"]
-                else:
-                    webport = 8091 + explorer_index
-                if "rpcuser" in conf_data:
-                    rpcuser = conf_data["rpcuser"]
-                else:
-                    rpcuser = self.utils.get_random_string(28)
-                if "rpcpassword" in conf_data:
-                    rpcpassword = conf_data["rpcpassword"]
-                else:
-                    rpcpassword = self.utils.get_random_string(32)
+                
+                rpcport = coin_ports["rpcport"]
+                zmqport = coin_ports["zmqport"]
+                webport = coin_ports["webport"]
+                rpcuser = self.utils.get_random_string(28)
+                rpcpassword = self.utils.get_random_string(32)
                     
                     
                 self.explorers.update({
