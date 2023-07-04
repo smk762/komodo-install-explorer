@@ -38,7 +38,7 @@ if [[ ! "$nvm_version" = "0.39.3" ]]; then
     echo -e "$STEP_START[ * ]$STEP_END Installing NodeJS"
     wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.39.3/install.sh | bash
 fi
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="/usr/local/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 echo $(which make)
 echo $(python -V)

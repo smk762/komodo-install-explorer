@@ -24,7 +24,7 @@ echo -e "$STEP_START[ * ]$STEP_END Stopping ${coin} daemon..."
 komodo-cli -ac_name=${coin} stop
 
 echo -e "$STEP_START[ * ]$STEP_END Loading NVM and Node 4..."
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="/usr/local/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 nvm use v4
 

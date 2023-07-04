@@ -38,11 +38,12 @@ class ConfigExplorer:
 
     def create_launcher(self):
         launcher = f"{self.coin}-explorer-start.sh"
+        
         with open(launcher, "w") as f:
             f.write("#!/bin/bash\n")
-            f.write(f'export NVM_DIR="{self.home}/.nvm"\n')
+            f.write(f'export NVM_DIR="/usr/local/nvm"\n')
             f.write(
-                f'[ -s "{self.home}/.nvm/nvm.sh" ] && . "{self.home}/.nvm/nvm.sh" # This loads nvm\n'
+                f'[ -s "/usr/local/nvm/nvm.sh" ] && . "/usr/local/nvm/nvm.sh" # This loads nvm\n'
             )
             f.write(f"cd {self.coin}-explorer\n")
             f.write(
