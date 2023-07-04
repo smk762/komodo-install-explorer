@@ -39,9 +39,6 @@ cd komodo-install-explorer
   - Create a sumbolic link from this file to the "/etc/nginx/sites-enabled" folder
   - Restart NGINX.
 
-You can also override some default constant values by copying the `.env.template` file to `.env` in the project root folder and editing the values (this may be useful for dockerised deployments).
-
-
 #### User Interface Customisation
 
 The Insight UI code is located in `TICKER-explorer/node_modules/insight-ui-komodo`.

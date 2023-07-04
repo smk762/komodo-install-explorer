@@ -76,8 +76,7 @@ class Utils:
         except:
             return {}
 
-    def get_coin_conf(self, coin):
-        coin_conf_file = self.get_coin_conf_file(coin)
+    def get_coin_conf(self, coin_conf_file):
         conf_data = {}
         if os.path.exists(coin_conf_file):
             with open(coin_conf_file, "r") as f:
@@ -86,17 +85,6 @@ class Utils:
                     k, v = line.split("=")
                     conf_data.update({k.strip(): v.strip()})
         return conf_data
-
-    def get_coin_conf_file(self, coin):
-        if coin == "KMD":
-            coin_conf_path = const.KMD_CONF_PATH
-            coin_conf_file = f"{const.KMD_CONF_PATH}/komodo.conf"
-        else:
-            coin_conf_path = f"{const.KMD_CONF_PATH}/{coin}"
-            coin_conf_file = f"{const.KMD_CONF_PATH}/{coin}/{coin}.conf"
-        if not os.path.exists(coin_conf_path):
-            os.makedirs(coin_conf_path)
-        return coin_conf_file
 
 
 class ConfigExplorer:
@@ -121,7 +109,7 @@ class ConfigExplorer:
         os.chmod(f"{self.coin}-explorer-start.sh", stat.S_IRWXU)
 
     def create_explorer_conf(self):
-        conf_data = self.utils.get_coin_conf(self.coin)
+        conf_data = self.utils.get_coin_conf(const.CONF_PATH)
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
@@ -201,7 +189,7 @@ class ConfigExplorer:
             logger.info(f"Updated explorers.json")
 
     def create_webaccess(self, noweb=False):
-        conf_data = self.utils.get_coin_conf(self.coin)
+        conf_data = self.utils.get_coin_conf(const.CONF_PATH)
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
@@ -265,7 +253,7 @@ class ConfigNginx:
     def setup(self):
         home = os.path.expanduser("~")
 
-        conf_data = self.utils.get_coin_conf(self.coin)
+        conf_data = self.utils.get_coin_conf(const.CONF_PATH)
         rpcuser = conf_data["rpcuser"]
         rpcpassword = conf_data["rpcpassword"]
 
@@ -334,7 +322,7 @@ class ConfigServices:
             ) as f:
                 for line in lines:
                     line = line.replace("COIN", self.coin)
-                    line = line.replace("ADDRESS", const.KMD_ADDRESS)
+                    line = line.replace("ADDRESS", const.DAEMON_ADDRESS)
                     line = line.replace("USERNAME", const.USERNAME)
                     line = line.replace("LAUNCH_PARAMS", self.launch_params)
                     f.write(line)
@@ -402,10 +390,10 @@ def main():
 
     elif option == "get_launch_params":
         utils = Utils()
-        print(f"komodod {utils.get_launch_params(ticker)} -pubkey=${const.KMD_PUBKEY}")
+        print(f"komodod {utils.get_launch_params(ticker)} -pubkey=${const.DAEMON_PUBKEY}")
 
     elif option == "create_services":
-        services = ConfigServices(ticker, const.KMD_ADDRESS, const.KMD_PUBKEY)
+        services = ConfigServices(ticker, const.DAEMON_ADDRESS, const.DAEMON_PUBKEY)
         services.create_daemon_service()
         services.create_explorer_service()
 
