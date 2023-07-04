@@ -3,6 +3,7 @@
 #
 # (c) Decker, 2018; Modified by smk 2023
 #
+DEBIAN_FRONTEND=noninteractive
 
 CUR_DIR=$(pwd)
 STEP_START='\e[1;47;42m'
