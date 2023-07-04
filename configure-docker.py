@@ -105,9 +105,7 @@ class ConfigExplorer:
 
 
 def main():
-    option = sys.argv[1]
-    ticker = sys.argv[2]
-    logger.info(f"Running step: {option} on {ticker}")
+    ticker = sys.argv[1]
     script_path = os.path.dirname(os.path.abspath(__file__))
 
     config = ConfigExplorer(ticker)
