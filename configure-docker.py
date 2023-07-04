@@ -111,15 +111,8 @@ def main():
     script_path = os.path.dirname(os.path.abspath(__file__))
 
     config = ConfigExplorer(ticker)
-
-    if option == "create_explorer_conf":
-        config.create_explorer_conf()
-        config.create_launcher()
-
-    elif option == "create_webaccess":
-        logger.info(f"Creating webaccess file with noweb=False")
-        config.create_webaccess(False)
-
+    config.create_explorer_conf()
+    config.create_launcher()
 
 if __name__ == "__main__":
     main()

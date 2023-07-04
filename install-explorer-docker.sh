@@ -33,8 +33,7 @@ fi
 
 # Configure explorer
 echo -e "$STEP_START[ * ]$STEP_END Configuring explorer for $TICKER..."
-./configure-docker.py create_explorer_conf ${TICKER}
-./configure-docker.py create_webaccess ${TICKER} $noweb
+./configure-docker.py ${TICKER}
 
 # Patch the explorer to display notarization data
 cd $CUR_DIR
