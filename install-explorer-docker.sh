@@ -8,6 +8,7 @@ DEBIAN_FRONTEND=noninteractive
 CUR_DIR=$(pwd)
 STEP_START='\e[1;47;42m'
 STEP_END='\e[0m'
+TICKER = $1
 
 # Setup NodeJS
 echo -e "$STEP_START[ * ]$STEP_END Loading NVM and Node 4..."

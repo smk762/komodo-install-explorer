@@ -22,8 +22,9 @@ RUN apt update && apt install git wget sudo python2 build-essential ufw python3 
 
 RUN git clone https://github.com/smk762/komodo-install-explorer -b dockerised && \
      cd komodo-install-explorer && ls -al && pip3 install --upgrade pip && \
-     pip3 install --upgrade -r requirements.txt && \
-     ./setup-explorer-directory.sh ${TICKER} && \
+     pip3 install --upgrade -r requirements.txt
+
+RUN ./setup-explorer-directory.sh ${TICKER} && \
      ./install-explorer-docker.sh ${TICKER}
 
 COPY entrypoint.sh /entrypoint.sh
