@@ -20,7 +20,7 @@ sudo apt --yes install libssl-dev libcurl4-gnutls-dev libsodium-dev libzmq3-dev 
 sudo apt --yes install python python2 python3 python3-pip python3-venv nginx libcurl4-openssl-dev
 sudo ln -s $(which python2) /usr/bin/python
 
-certbot=$(certbot --version)
+certbot=$(certbot --version) || ""
 if [[ ! "$certbot" == "certbot 2.6.0" ]]
     # Install snap and certbot
     sudo apt update
