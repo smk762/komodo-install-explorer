@@ -110,6 +110,7 @@ def main():
 
     config = ConfigExplorer(ticker)
     config.save_bitcore_conf()
+    config.create_launcher()
 
 if __name__ == "__main__":
     main()
