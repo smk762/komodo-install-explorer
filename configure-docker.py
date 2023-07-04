@@ -3,8 +3,6 @@ import os
 import sys
 import json
 import const
-import string
-import secrets
 import requests
 from pathlib import Path
 from dotenv import load_dotenv

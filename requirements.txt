@@ -1,2 +1,3 @@
 slick-bitcoinrpc==0.1.4
 python-dotenv==0.21.1
+requests==2.31.0
