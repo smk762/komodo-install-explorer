@@ -54,6 +54,7 @@ class ConfigExplorer:
 
     def save_bitcore_conf(self):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
+        logger.info(f"const.CONF_PATH: {const.CONF_PATH}")
         conf = self.utils.get_coin_conf(const.CONF_PATH)
         logger.info(f"conf: {conf}")
         logger.info(f"coin: {self.coin}")
