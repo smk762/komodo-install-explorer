@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import os
 import getpass 
-from dotenv import load_dotenv
-load_dotenv()
 
 # User who is running the script
 USERNAME = 'komodian'
@@ -20,3 +18,9 @@ RPC_PORT = os.getenv(f'RPC_PORT')
 ZMQ_PORT = os.getenv(f'ZMQ_PORT')
 # Web port for explorer
 WEB_PORT = os.getenv(f'WEB_PORT')
+print(f'CONF_PATH: {CONF_PATH}')
+print(f'TICKER: {TICKER}')
+print(f'TICKER_IP: {TICKER_IP}')
+print(f'RPC_PORT: {RPC_PORT}')
+print(f'ZMQ_PORT: {ZMQ_PORT}')
+print(f'WEB_PORT: {WEB_PORT}')
