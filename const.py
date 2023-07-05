@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
-import getpass 
+from dotenv import load_dotenv
+load_dotenv()
 
 # User who is running the script
 USERNAME = 'komodian'
