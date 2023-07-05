@@ -52,6 +52,7 @@ if [ ! -d "$CUR_DIR/explorer-notarized" ]; then
 else
   echo "A directory named 'explorer-notarized' already exists; assuming it is cloned from the repo: https://github.com/gcharang/explorer-notarized , trying to update and patch the explorer using it"
   cd $CUR_DIR/explorer-notarized
+  git config --global --add safe.directory /home/komodian/komodo-install-explorer/explorer-notarized
   git pull
 fi
 cd $CUR_DIR/explorer-notarized

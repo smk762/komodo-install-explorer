@@ -37,7 +37,7 @@ class ConfigExplorer:
         self.utils = Utils()
 
     def create_launcher(self):
-        launcher = f"{self.coin}-explorer-start.sh"
+        launcher = f"{self.script_path}/{self.coin}-explorer-start.sh"
         
         with open(launcher, "w") as f:
             f.write("#!/bin/bash\n")
@@ -50,6 +50,7 @@ class ConfigExplorer:
                 "nvm use v4; ./node_modules/bitcore-node-komodo/bin/bitcore-node start\n"
             )
         os.chmod(launcher, 0o755)
+        return launcher
 
     def save_bitcore_conf(self):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
@@ -102,7 +103,7 @@ class ConfigExplorer:
                 }
             }
             json.dump(config, f, indent=4)
-            logger.info(f"Updated {bitcore_conf} for {self.coin}")
+            return bitcore_conf
 
 
 def main():
@@ -110,8 +111,10 @@ def main():
     script_path = os.path.dirname(os.path.abspath(__file__))
 
     config = ConfigExplorer(ticker)
-    config.save_bitcore_conf()
-    config.create_launcher()
+    bitcore = config.save_bitcore_conf()
+    logger.info(f"Created {bitcore} for {ticker}")
+    launcher = config.create_launcher()
+    logger.info(f"Created {launcher} for {ticker}")
 
 if __name__ == "__main__":
     main()

@@ -29,7 +29,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
      bsdmainutils automake libprotobuf-dev protobuf-compiler libqrencode-dev \
      libssl-dev libsodium-dev libzmq3-dev libdb++-dev \
      python python2 python3 python3-pip python3-venv nginx libcurl4-openssl-dev && \
-     echo $(which python2) && ln -s $(which python2) /usr/bin/python
+     echo $(which python2) && ln -sf $(which python2) /usr/bin/python
 
 RUN mkdir -p $NVM_DIR && \
      touch ~/.bashrc && \
