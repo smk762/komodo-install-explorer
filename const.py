@@ -14,6 +14,8 @@ CONF_PATH = os.getenv(f'CONF_PATH')
 TICKER = os.getenv(f'TICKER')
 # IP of ticker daemon
 TICKER_IP = os.getenv(f'TICKER_IP')
+# RPC port of ticker daemon
+RPC_PORT = os.getenv(f'RPC_PORT')
 # ZMQ port of ticker daemon
 ZMQ_PORT = os.getenv(f'ZMQ_PORT')
 # Web port for explorer

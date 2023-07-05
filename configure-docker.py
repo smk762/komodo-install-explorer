@@ -55,10 +55,11 @@ class ConfigExplorer:
     def save_bitcore_conf(self):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
         conf = self.utils.get_coin_conf(const.CONF_PATH)
+        logger.info(f"conf: {conf}")
         logger.info(f"coin: {self.coin}")
         logger.info(f"bitcore_conf: {bitcore_conf}")
         rpcip = self.coin.lower()
-        rpcport = conf["rpcport"]
+        rpcport = const.RPC_PORT
         rpcuser = conf["rpcuser"]
         rpcpassword = conf["rpcpassword"]
         zmqport = const.ZMQ_PORT
