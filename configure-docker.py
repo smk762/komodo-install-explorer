@@ -56,7 +56,7 @@ class ConfigExplorer:
         conf = self.utils.get_coin_conf(const.CONF_PATH)
         logger.info(f"coin: {self.coin}")
         logger.info(f"bitcore_conf: {bitcore_conf}")
-        rpcip = conf["rpcallowip"].split("/")[0].strip()
+        rpcip = self.coin.lower()
         rpcport = conf["rpcport"]
         rpcuser = conf["rpcuser"]
         rpcpassword = conf["rpcpassword"]
