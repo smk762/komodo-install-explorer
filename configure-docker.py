@@ -19,9 +19,9 @@ class Utils:
 
     def get_coin_conf(self, coin_conf_file):
         conf_data = {}
-        logger.status(f"checking {coin_conf_file}")
+        logger.debug(f"checking {coin_conf_file}")
         if os.path.exists(coin_conf_file):
-            logger.status(f"Reading {coin_conf_file}")
+            logger.debug(f"Reading {coin_conf_file}")
             with open(coin_conf_file, "r") as f:
                 lines = f.readlines()
                 for line in lines:
