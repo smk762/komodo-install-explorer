@@ -19,9 +19,7 @@ class Utils:
 
     def get_coin_conf(self, coin_conf_file):
         conf_data = {}
-        logger.debug(f"checking {coin_conf_file}")
         if os.path.exists(coin_conf_file):
-            logger.debug(f"Reading {coin_conf_file}")
             with open(coin_conf_file, "r") as f:
                 lines = f.readlines()
                 for line in lines:
@@ -57,24 +55,12 @@ class ConfigExplorer:
 
     def save_bitcore_conf(self):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
-        logger.info(f"const.CONF_PATH: {const.CONF_PATH}")
-        logger.info(f"coin: {self.coin}")
-        logger.info(f"bitcore_conf: {bitcore_conf}")
         rpcip = self.coin.lower()
         rpcport = const.RPC_PORT
         rpcuser = const.RPC_USER
         rpcpassword = const.RPC_PASS
         zmqport = const.ZMQ_PORT
         webport = const.WEB_PORT
-
-        logger.info(f"webport: {webport}")
-        logger.info(f"rpcip: {rpcip}")
-        logger.info(f"rpcport: {rpcport}")
-        logger.info(f"rpcuser: {rpcuser}")
-        logger.info(f"rpcpass: {rpcuser}")
-        logger.info(f"rpcpassword: {rpcpassword}")
-        logger.info(f"zmqport: {zmqport}")
-        
         with open(bitcore_conf, "w+") as f:
             config = {
                 "network": "mainnet",

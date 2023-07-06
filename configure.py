@@ -57,7 +57,6 @@ class Utils:
             return {}
 
     def get_explorers(self):
-        print(f"{self.project_root}/coin_ports.json")
         with open(f"{self.project_root}/coin_ports.json", "r") as f:
             coin_ports = json.load(f)
         try:
@@ -140,14 +139,6 @@ class ConfigExplorer:
 
     def save_bitcore_conf(self, webport, rpcip, rpcport, rpcuser, rpcpassword, zmqport):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
-        logger.info(f"coin: {self.coin}")
-        logger.info(f"bitcore_conf: {bitcore_conf}")
-        logger.info(f"webport: {webport}")
-        logger.info(f"rpcip: {rpcip}")
-        logger.info(f"rpcport: {rpcport}")
-        logger.info(f"rpcuser: {rpcuser}")
-        logger.info(f"rpcpassword: {rpcpassword}")
-        logger.info(f"zmqport: {zmqport}")
         
         with open(bitcore_conf, "w+") as f:
             config = {
