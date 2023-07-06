@@ -20,9 +20,11 @@ class Utils:
     def get_coin_conf(self, coin_conf_file):
         conf_data = {}
         if os.path.exists(coin_conf_file):
+            logger.status(f"Reading {coin_conf_file}")
             with open(coin_conf_file, "r") as f:
                 lines = f.readlines()
                 for line in lines:
+                    logger.darkgrey(f"Reading {coin_conf_file}")
                     k, v = line.split("=")
                     conf_data.update({k.strip(): v.strip()})
         return conf_data
