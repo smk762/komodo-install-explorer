@@ -58,14 +58,12 @@ class ConfigExplorer:
     def save_bitcore_conf(self):
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
         logger.info(f"const.CONF_PATH: {const.CONF_PATH}")
-        conf = self.utils.get_coin_conf(const.CONF_PATH)
-        logger.info(f"conf: {conf}")
         logger.info(f"coin: {self.coin}")
         logger.info(f"bitcore_conf: {bitcore_conf}")
         rpcip = self.coin.lower()
         rpcport = const.RPC_PORT
-        rpcuser = conf["rpcuser"]
-        rpcpassword = conf["rpcpassword"]
+        rpcuser = const.RPC_USER
+        rpcpassword = const.RPC_PASS
         zmqport = const.ZMQ_PORT
         webport = const.WEB_PORT
 
@@ -73,6 +71,7 @@ class ConfigExplorer:
         logger.info(f"rpcip: {rpcip}")
         logger.info(f"rpcport: {rpcport}")
         logger.info(f"rpcuser: {rpcuser}")
+        logger.info(f"rpcpass: {rpcuser}")
         logger.info(f"rpcpassword: {rpcpassword}")
         logger.info(f"zmqport: {zmqport}")
         
