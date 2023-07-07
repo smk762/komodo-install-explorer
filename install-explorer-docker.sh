@@ -63,5 +63,4 @@ echo -e "$STEP_START[ * ]$STEP_END Updating Insight UI styles and logos for ${TI
 cd $CUR_DIR/
 ./update-styles.sh "${TICKER}"
 
-
 echo -e "$STEP_START[ * ]$STEP_END Done!"

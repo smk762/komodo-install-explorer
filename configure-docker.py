@@ -57,8 +57,8 @@ class ConfigExplorer:
         bitcore_conf = f"{self.script_path}/{self.coin}-explorer/bitcore-node.json"
         rpcip = self.coin.lower()
         rpcport = const.RPC_PORT
-        rpcuser = const.RPC_USER
-        rpcpassword = const.RPC_PASS
+        rpcuser = const.RPC_USER.replace('"', "")
+        rpcpassword = const.RPC_PASS.replace('"', "")
         zmqport = const.ZMQ_PORT
         webport = const.WEB_PORT
         with open(bitcore_conf, "w+") as f:
