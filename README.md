@@ -5,6 +5,10 @@ This repository simply modifies Decker's script from https://github.com/DeckerSU
 
 ## Instructions
 
+This branch and others with similar name are intended to be used as sumbodules in https://github.com/smk762/notary_docker_main
+These are grouped into docker containers, and launched with docker-compose.
+There are a few branches to spread the load, each with a branch name like `notary-explorer-group-NUMBER` in this repo, with an accompanying branch with the same name in https://github.com/smk762/notary_docker_main
+
 ### Explorer installation
 
 - Stop the Smart Chain you want to add an explorer for (if it is running).
