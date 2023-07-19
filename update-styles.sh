@@ -24,12 +24,19 @@ fi
 
 echo -e "$STEP_START[ * ]$STEP_END Creating logo and favicon for ${coin}..."
 if [ -f "logos/${coin}-logo.png" ]; then
-    echo "Logo already exists, skipping..."
+    echo "${coin} logo already exists, skipping..."
 else
-    echo "Downloading logo..."
+    echo "Downloading ${coin} logo..."
     cd logos
     coin_lower=$(echo "$coin" | awk '{print tolower($0)}');
     wget https://raw.githubusercontent.com/KomodoPlatform/coins/master/icons/${coin_lower}.png -O ${coin}-logo.png
+    cd ..
+fi
+if [ -f "logos/${coin}-favicon.ico" ]; then
+    echo "${coin} favicon already exists, skipping..."
+else
+    echo "Creating ${coin} favicon..."
+    cd logos
     ./make_favicon.sh ${coin}
     cd ..
 fi
