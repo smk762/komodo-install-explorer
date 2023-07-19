@@ -16,7 +16,7 @@ There are a few branches to spread the load, each with a branch name like `notar
 
 ```bash
 cd ~
-git clone https://github.com/smk762/komodo-install-explorer -b dockerised
+git clone https://github.com/smk762/komodo-install-explorer -b ${BRANCH_NAME} # replace ${BRANCH_NAME} with the branch name for the explorer group you want to use
 cd komodo-install-explorer
 ```
 
