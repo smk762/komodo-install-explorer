@@ -22,6 +22,19 @@ if [ ! -f "${coin}-explorer/node_modules/insight-ui-komodo/public/views/index.ht
     cp "${coin}-explorer/node_modules/insight-ui-komodo/public/views/status.html" "${coin}-explorer/node_modules/insight-ui-komodo/public/views/status.html.original"
 fi
 
+echo -e "$STEP_START[ * ]$STEP_END Creating logo and favicon for ${coin}..."
+if [ -f "logos/${coin}-logo.png" ]; then
+    echo "Logo already exists, skipping..."
+else
+    echo "Downloading logo..."
+    cd logos
+    coin_lower=$(echo "$coin" | awk '{print tolower($0)}');
+    wget https://raw.githubusercontent.com/KomodoPlatform/coins/master/icons/${coin_lower}.png -O ${coin}-logo.png
+    ./make_favicon.sh ${coin}
+    cd ..
+fi
+
+
 echo -e "$STEP_START[ * ]$STEP_END Updating logos..."
 # TODO: try and download the logos from the coins repo and generate the favicon.ico and resized logo.png
 cp logos/${coin}-favicon.ico ${coin}-explorer/node_modules/insight-ui-komodo/public/img/icons/favicon.ico
