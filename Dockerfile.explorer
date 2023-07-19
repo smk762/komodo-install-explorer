@@ -58,8 +58,9 @@ ENV TICKER_IP=${TICKER_IP}
 ENV CONF_PATH=${CONF_PATH}
 ENV ZMQ_PORT=${ZMQ_PORT}
 ENV WEB_PORT=${WEB_PORT}
+ENV EXPLORER_BRANCH=${EXPLORER_BRANCH}
 
-RUN git clone https://github.com/smk762/komodo-install-explorer -b dockerised-notary-chains && \
+RUN git clone https://github.com/smk762/komodo-install-explorer -b ${EXPLORER_BRANCH} && \
      cd komodo-install-explorer && ls -al && pip3 install --upgrade pip && \
      pip3 install --upgrade -r requirements.txt && \
      ./setup-explorer-directory.sh ${TICKER} && \ 
@@ -67,7 +68,6 @@ RUN git clone https://github.com/smk762/komodo-install-explorer -b dockerised-no
 
 COPY entrypoint.sh /entrypoint.sh
 COPY launch_files/run_${TICKER}_explorer.sh /run.sh
-# COPY templated exporer config files
 
 RUN chown -R komodian:notarygroup /home/komodian
 USER komodian
